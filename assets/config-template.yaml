@@ -1,0 +1,33 @@
+# skill-issue configuration
+# Copy this to ~/.skill-issue/config.yaml and customize
+
+frequency:
+  cooldown_minutes: 8          # Minimum minutes between challenges
+  challenge_probability: 0.6   # Probability for SOMETIMES triggers (0.0–1.0)
+  max_per_session: 20          # Maximum challenges per session
+
+difficulty:
+  bias: 0                      # -2 to +2, shifts difficulty distribution
+  auto_adapt: true             # Automatically adjust based on performance
+
+challenge_types:
+  pen-paper: true
+  explain-back: true
+  predict: true
+  spot-bug: true
+  complexity: true
+  connect-dots: true
+
+display:
+  show_xp_after_challenge: true
+  show_streak: true
+  celebration_messages: true
+  compact_mode: false          # Minimal formatting for challenges
+
+domains:                       # Primary domains (seeds topic weights)
+  - quantum-computing
+  - machine-learning
+  - scientific-computing
+
+focus_mode: false              # When true, suppress all challenges
+quiet_hours: []                # e.g., ["22:00-08:00"] to suppress during these times
