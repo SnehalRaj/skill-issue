@@ -1,0 +1,2 @@
+[console_scripts]
+skill-issue = skill_issue.cli:main

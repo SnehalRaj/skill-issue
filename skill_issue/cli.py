@@ -11,11 +11,54 @@ from pathlib import Path
 def cmd_init(args):
     """Initialize ~/.skill-issue/ profile."""
     from skill_issue.init_profile import init_profile
+    domains = args.domains.split(",") if args.domains else ["algorithms", "debugging", "design"]
     init_profile(
         username=args.name or os.environ.get("USER", "human"),
-        domains=args.domains.split(",") if args.domains else ["quantum", "ml", "algorithms"],
+        domains=domains,
         force=getattr(args, "force", False),
     )
+
+    skill_md_path = Path(__file__).parent.parent / "SKILL.md"
+
+    if args.claude:
+        _inject_into_file("CLAUDE.md", skill_md_path)
+    elif args.cursor:
+        _inject_into_file(".cursorrules", skill_md_path)
+    elif args.print_only:
+        if skill_md_path.exists():
+            print("\n" + "─" * 60)
+            print("Paste this into your editor's system prompt / rules file:")
+            print("─" * 60)
+            print(skill_md_path.read_text())
+    else:
+        print("\nNext step — activate in your editor:")
+        print("  Claude Code:  skill-issue init --claude")
+        print("  Cursor:       skill-issue init --cursor")
+        print("  Other:        skill-issue init --print")
+
+
+def _inject_into_file(filename: str, skill_md_path: Path):
+    """Append skill-issue activation block to a config file."""
+    target = Path.cwd() / filename
+    marker = "<!-- skill-issue -->"
+    skill_block = f"\n{marker}\n"
+
+    if skill_md_path.exists():
+        skill_block += f"\n{skill_md_path.read_text().strip()}\n"
+    else:
+        skill_block += "\n# skill-issue active — gamified challenges enabled\n"
+
+    if target.exists():
+        content = target.read_text()
+        if marker in content:
+            print(f"skill-issue already active in {filename}")
+            return
+        target.write_text(content + skill_block)
+    else:
+        target.write_text(skill_block.lstrip())
+
+    print(f"✓ skill-issue injected into {filename}")
+    print(f"  Open a Claude Code session in this directory — challenges will start automatically.")
 
 
 def cmd_score(args):
@@ -97,6 +140,9 @@ def main():
     p_init.add_argument("--domains", default="quantum,ml,algorithms",
                         help="Comma-separated domains (default: quantum,ml,algorithms)")
     p_init.add_argument("--force", action="store_true", help="Overwrite existing profile")
+    p_init.add_argument("--claude", action="store_true", help="Auto-inject into CLAUDE.md (Claude Code)")
+    p_init.add_argument("--cursor", action="store_true", help="Auto-inject into .cursorrules (Cursor)")
+    p_init.add_argument("--print", dest="print_only", action="store_true", help="Print SKILL.md to paste manually")
     p_init.set_defaults(func=cmd_init)
 
     # score
