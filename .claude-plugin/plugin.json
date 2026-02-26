@@ -1,0 +1,13 @@
+{
+  "name": "skill-issue",
+  "description": "Gamified active learning for agentic coding sessions — bite-sized challenges, XP, streaks, and topic mastery embedded directly into your workflow",
+  "version": "1.0.0",
+  "author": {
+    "name": "Snehal Raj",
+    "github": "SnehalRaj"
+  },
+  "homepage": "https://github.com/SnehalRaj/skill-issue",
+  "repository": "https://github.com/SnehalRaj/skill-issue",
+  "license": "MIT",
+  "keywords": ["learning", "gamification", "skills", "xp", "spaced-repetition", "education", "productivity"]
+}
