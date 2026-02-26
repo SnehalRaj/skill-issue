@@ -2,15 +2,22 @@
 
 > *You're not bad at coding. You just have a skill issue.*
 
-A gamified active learning system that turns passive AI-assisted coding into genuine skill building. Works with Claude Code, Cursor, Copilot, and any agentic coding workflow.
+Your AI writes the code. But do **you** actually understand it?
+
+**skill-issue** embeds bite-sized challenges directly into your Claude Code / Cursor / Copilot workflow — at the exact moment you'd otherwise just accept and move on. Earn XP. Build streaks. Actually learn.
 
 ---
 
-## The Problem
+## Install
 
-Modern AI coding tools create a dangerous pattern: **cognitive offloading without cognitive engagement**. You accept generated code, ship it, and slowly forget how to derive, debug, and reason from first principles.
+```bash
+pip install skill-issue
+skill-issue init --claude    # auto-configures Claude Code
+```
 
-**skill-issue** fixes this. It embeds spaced-repetition challenges directly into your coding workflow — pen-and-paper calculations, explain-it-back prompts, predict-the-output puzzles, spot-the-bug drills — at exactly the moment you need them.
+Done. skill-issue is now active in every Claude Code session in this project.
+
+> **Other editors:** `skill-issue init --cursor` / `skill-issue init --print` (manual paste)
 
 ---
 
@@ -18,148 +25,84 @@ Modern AI coding tools create a dangerous pattern: **cognitive offloading withou
 
 ![skill-issue in action](assets/demo/skill-issue-demo.gif)
 
+---
+
 ## How It Works
 
-The agent tracks what it just built and challenges you on it:
+The agent codes as normal. When it does something non-trivial — fixes a subtle bug, implements an algorithm, makes an architectural tradeoff — it pauses and challenges you:
 
 ```
-🧠 SKILL CHECK #47 — `quantum-circuits` — Difficulty: Expert
+🧠 SKILL CHECK #23 — `algorithms` — Difficulty: Practitioner
 
-I just used the parameter shift rule to compute the gradient of an expectation value.
+I just wrote a two-pointer function to find all pairs summing to K.
 
-→ In 2-3 sentences: Why is the shift exactly π/2? What property of the gate
-  generator makes this work?
+→ What's the time and space complexity? Could it be done better?
 
-`[answer]` `[hint]` `[skip]`
+`[answer]`  `[hint]`  `[skip]`
 ```
 
-You answer. The agent evaluates, gives feedback, and awards XP. Then coding resumes.
+You answer. It evaluates, gives feedback, awards XP. Coding resumes.
+
+**It never interrupts boilerplate.** Only teaching moments.
 
 ---
 
-## Features
+## Challenge Types
 
-- **6 challenge types**: Pen & Paper 📝, Explain Back 🗣️, Predict 🔮, Spot the Bug 🐛, Complexity ⏱️, Connect the Dots 🔗
-- **Persistent progress**: XP, streaks, per-topic mastery levels (Apprentice → Practitioner → Expert → Master)
-- **Difficulty adaptation**: Auto-adjusts based on your rolling performance window
-- **Streak multipliers**: Up to 2.5× XP bonus for consecutive correct answers
-- **Trophy wall**: Human-readable `leaderboard.md` that updates after every session
-- **Smart triggering**: Challenges fire on teaching moments, never on boilerplate — respects cooldowns and focus mode
-- **Full command set**: `harder`, `easier`, `focus mode`, `my stats`, `challenge me`, `trophy wall`
-
----
-
-## Installation
-
-```bash
-pip install skill-issue
-skill-issue init
-```
-
-That's it. Then load `SKILL.md` into your Claude Code / Cursor / agent context. The agent handles the rest.
-
-```bash
-# Optional: check your stats anytime
-skill-issue stats
-
-# Regenerate your trophy wall
-skill-issue report
-```
-
----
-
-## XP Formula
-
-```
-final_xp = round(base_xp × difficulty_mult × streak_mult × hint_penalty)
-```
-
-| Score | Meaning | Base XP |
+| | Type | Example trigger |
 |---|---|---|
-| 0 | Wrong / Skipped | 0 |
-| 1 | Partial | 5 |
-| 2 | Correct | 12 |
-| 3 | Exceptional | 20 |
-
-Difficulty multipliers: Apprentice 1×, Practitioner 1.5×, Expert 2×, Master 3×
-
-Streak multiplier: `min(1.0 + streak × 0.15, 2.5)` — caps at 2.5×
+| 📝 | Pen & Paper | "What's the output of this function for input [3, 1, 4]?" |
+| 🗣️ | Explain Back | "In 2 sentences: why does memoization fix this?" |
+| 🔮 | Predict | "What does this regex match on 'hello world'?" |
+| 🐛 | Spot the Bug | Show a slightly broken version — find what's wrong |
+| ⏱️ | Complexity | "What's the Big-O of what I just wrote? Is there a better way?" |
+| 🔗 | Connect | "How does this relate to what we built last session?" |
 
 ---
 
-## Project Structure
+## XP & Progression
 
 ```
-skill-issue/
-├── SKILL.md                        # Main skill (load this into your agent)
-├── references/
-│   ├── challenge-design.md         # Challenge types, domain banks, difficulty tiers
-│   ├── scoring-and-adaptation.md   # Full XP math, topic mastery, profile schemas
-│   └── interaction-patterns.md     # UX patterns, feedback templates, leaderboard format
-├── scripts/
-│   ├── init_profile.py             # Bootstrap ~/.skill-issue/
-│   ├── update_score.py             # Apply XP after a challenge
-│   ├── generate_report.py          # Regenerate trophy wall
-│   └── export_stats.py             # Export history to JSON/CSV
-└── assets/
-    └── config-template.yaml        # Annotated default config
+XP = base × difficulty × streak_multiplier
 ```
 
----
-
-## Domain Banks
-
-Built-in challenge banks for:
-- ⚛️ **Quantum computing** — circuits, RBS gates, VQE, classical shadows, barren plateaus
-- 🤖 **Machine learning** — backprop, attention, loss functions, regularization
-- 📐 **Linear algebra** — eigenvalues, tensor products, unitary proofs
-- ⚙️ **Algorithms** — complexity analysis, correctness arguments, recurrences
-- 🐍 **Python / software engineering** — mutability, broadcasting, decorators
-
-Extend with your own domains in `references/challenge-design.md`.
+- Streak bonus: up to **2.5×** for consecutive correct answers
+- Per-topic mastery: Apprentice → Practitioner → Expert → Master
+- Auto-adapts difficulty based on your rolling performance
+- Trophy wall in `~/.skill-issue/leaderboard.md`
 
 ---
 
 ## Commands
 
-| Say this | Does this |
-|---|---|
-| `my stats` | Show XP, level, streak |
-| `trophy wall` | Show full leaderboard |
-| `harder` / `easier` | Shift difficulty bias |
-| `focus mode` | Pause all challenges |
-| `challenge me` | Force a challenge now |
-| `hint` | Get a nudge (0.75× XP penalty) |
-| `skip` | Skip (streak resets) |
+Say these to the agent at any time:
+
+```
+my stats       → XP, level, streak
+harder         → bump difficulty
+focus mode     → pause all challenges
+challenge me   → force one right now
+trophy wall    → show leaderboard
+```
 
 ---
 
-## Philosophy
+## Why This Exists
 
-The name is a playful inversion of the gaming meme. Claude has skills (literally, `.skill` files). But what about *your* skills?
+AI coding tools are incredible. They're also making it easy to ship code you don't understand.
 
-**skill-issue** is built on three beliefs:
+Not because you're lazy — because the workflow doesn't give you a reason to engage. You're in flow, the code looks right, you move on.
 
-1. **Understanding compounds.** A researcher who deeply understands the code they ship is 10× more effective than one who accepts and moves on.
-2. **Interruption is a feature.** The right challenge at the right moment is worth more than a passive tutorial at the wrong one.
-3. **Personal, not competitive.** Your trophy wall tracks your growth — not a leaderboard against others. No gamification dark patterns.
+skill-issue adds that reason. It's the difference between watching someone solve a puzzle and solving it yourself.
 
 ---
 
 ## Contributing
 
-Pull requests welcome. Areas that would most benefit:
-- More domain-specific challenge banks (add to `references/challenge-design.md`)
-- Additional challenge types
-- Better difficulty calibration data
-- Integration guides for specific coding agents
+The challenge banks (in `references/challenge-design.md`) are just markdown — easy to extend for your domain. PRs welcome.
+
+**MIT license.**
 
 ---
 
-## License
-
-MIT
-
----
-
-*Built by [@SnehalRaj](https://github.com/SnehalRaj) with Claude Code*
+*Works with Claude Code, Cursor, GitHub Copilot, and any agent that reads a system prompt.*
