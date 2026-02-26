@@ -52,14 +52,19 @@ You answer. The agent evaluates, gives feedback, and awards XP. Then coding resu
 ## Installation
 
 ```bash
-# Clone the skill
-git clone https://github.com/SnehalRaj/skill-issue
-
-# Initialize your profile (first run)
-python skill-issue/scripts/init_profile.py your-name
+pip install skill-issue
+skill-issue init
 ```
 
-Then load `SKILL.md` into your Claude Code / Cursor / agent context. The agent handles the rest.
+That's it. Then load `SKILL.md` into your Claude Code / Cursor / agent context. The agent handles the rest.
+
+```bash
+# Optional: check your stats anytime
+skill-issue stats
+
+# Regenerate your trophy wall
+skill-issue report
+```
 
 ---
 
