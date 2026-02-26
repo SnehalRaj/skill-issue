@@ -10,14 +10,23 @@ Your AI writes the code. But do **you** actually understand it?
 
 ## Install
 
-```bash
-pip install skill-issue
-skill-issue init --claude    # auto-configures Claude Code
+**Claude Code** (native, one-time):
+```
+/plugin marketplace add SnehalRaj/skill-issue-marketplace
+/plugin install skill-issue@skill-issue-marketplace
 ```
 
-Done. skill-issue is now active in every Claude Code session in this project.
+**Cursor:**
+```
+/plugin-add skill-issue
+```
 
-> **Other editors:** `skill-issue init --cursor` / `skill-issue init --print` (manual paste)
+**Codex / anything else:**
+```bash
+pip install skill-issue && skill-issue init
+```
+
+Open a session. skill-issue is live.
 
 ---
 
