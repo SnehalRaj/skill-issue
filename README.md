@@ -14,6 +14,10 @@ Modern AI coding tools create a dangerous pattern: **cognitive offloading withou
 
 ---
 
+## Demo
+
+![skill-issue in action](assets/demo/skill-issue-demo.gif)
+
 ## How It Works
 
 The agent tracks what it just built and challenges you on it:
