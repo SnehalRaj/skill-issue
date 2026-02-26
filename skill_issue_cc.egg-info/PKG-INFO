@@ -1,3 +1,19 @@
+Metadata-Version: 2.4
+Name: skill-issue-cc
+Version: 1.0.0
+Summary: Gamified active learning system for agentic coding sessions
+License: MIT
+Keywords: claude,claude-code,ai,learning,gamification,spaced-repetition
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Education
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+
 # skill-issue 🧠
 
 > *You're not bad at coding. You just have a skill issue.*
@@ -23,7 +39,7 @@ Your AI writes the code. But do **you** actually understand it?
 
 **Codex / anything else:**
 ```bash
-pip install skill-issue-cc && skill-issue init
+pip install skill-issue && skill-issue init
 ```
 
 Open a session. skill-issue is live.
