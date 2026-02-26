@@ -1,117 +1,201 @@
-# skill-issue 🧠
+<div align="center">
 
-> *You're not bad at coding. You just have a skill issue.*
+<img src="assets/demo/skill-issue-demo.gif" width="600" alt="skill-issue demo" />
 
-Your AI writes the code. But do **you** actually understand it?
+<h1>skill-issue 🧠</h1>
 
-**skill-issue** embeds bite-sized challenges directly into your Claude Code / Cursor / Copilot workflow — at the exact moment you'd otherwise just accept and move on. Earn XP. Build streaks. Actually learn.
+<p><strong>Gamified active learning, embedded in your AI coding workflow.</strong></p>
 
----
+<p>
+  <a href="https://pypi.org/project/skill-issue-cc/"><img src="https://img.shields.io/pypi/v/skill-issue-cc?color=blue&label=pip" alt="PyPI" /></a>
+  <a href="https://github.com/SnehalRaj/skill-issue/blob/main/LICENSE"><img src="https://img.shields.io/github/license/SnehalRaj/skill-issue?color=green" alt="License" /></a>
+  <a href="https://github.com/SnehalRaj/skill-issue/stargazers"><img src="https://img.shields.io/github/stars/SnehalRaj/skill-issue?style=flat" alt="Stars" /></a>
+  <img src="https://img.shields.io/badge/works%20with-Claude%20Code-orange" alt="Claude Code" />
+  <img src="https://img.shields.io/badge/works%20with-Cursor-purple" alt="Cursor" />
+</p>
 
-## Install
+<p><em>Your AI writes the code. But do <strong>you</strong> actually understand it?</em></p>
 
-**Claude Code** (native, one-time):
-```
-/plugin marketplace add SnehalRaj/skill-issue-marketplace
-/plugin install skill-issue@skill-issue-marketplace
-```
-
-**Cursor:**
-```
-/plugin-add skill-issue
-```
-
-**Codex / anything else:**
-```bash
-pip install skill-issue-cc && skill-issue init
-```
-
-Open a session. skill-issue is live.
+</div>
 
 ---
 
-## Demo
+## The Problem
 
-![skill-issue in action](assets/demo/skill-issue-demo.gif)
+AI coding tools are making it easy to ship code you don't fully understand.
+
+Not because you're lazy — because the workflow doesn't give you a reason to engage. The code looks right, you move on. Over time, you stop deriving. Stop reasoning from first principles. The skills atrophy quietly.
+
+**skill-issue** is the antidote. It watches what your agent builds and challenges you on it — at the exact moment you'd otherwise just accept and continue.
 
 ---
 
 ## How It Works
 
-The agent codes as normal. When it does something non-trivial — fixes a subtle bug, implements an algorithm, makes an architectural tradeoff — it pauses and challenges you:
+The agent codes as normal. When it does something non-trivial, it pauses:
 
 ```
 🧠 SKILL CHECK #23 — `algorithms` — Difficulty: Practitioner
 
-I just wrote a two-pointer function to find all pairs summing to K.
+I just added memoization to fix the slow recursion.
 
-→ What's the time and space complexity? Could it be done better?
+→ What was the time complexity before caching? And after? Explain why.
 
 `[answer]`  `[hint]`  `[skip]`
 ```
 
-You answer. It evaluates, gives feedback, awards XP. Coding resumes.
+You answer. It evaluates, gives feedback, awards XP. Then coding resumes.
 
 **It never interrupts boilerplate.** Only teaching moments.
 
 ---
 
-## Challenge Types
+## Install
 
-| | Type | Example trigger |
-|---|---|---|
-| 📝 | Pen & Paper | "What's the output of this function for input [3, 1, 4]?" |
-| 🗣️ | Explain Back | "In 2 sentences: why does memoization fix this?" |
-| 🔮 | Predict | "What does this regex match on 'hello world'?" |
-| 🐛 | Spot the Bug | Show a slightly broken version — find what's wrong |
-| ⏱️ | Complexity | "What's the Big-O of what I just wrote? Is there a better way?" |
-| 🔗 | Connect | "How does this relate to what we built last session?" |
+### Claude Code (native)
+
+```
+/plugin marketplace add SnehalRaj/skill-issue-marketplace
+/plugin install skill-issue@skill-issue-marketplace
+```
+
+Open a session. Done.
+
+### Cursor
+
+```
+/plugin-add skill-issue
+```
+
+### Codex / Everything Else
+
+```bash
+pip install skill-issue-cc
+skill-issue init
+```
 
 ---
 
-## XP & Progression
+## Challenge Types
+
+| | Type | What it tests |
+|---|---|---|
+| 📝 | **Pen & Paper** | Can you compute this by hand? |
+| 🗣️ | **Explain Back** | Can you explain *why* this works? |
+| 🔮 | **Predict** | What does this function return? |
+| 🐛 | **Spot the Bug** | Here's a broken version — find it |
+| ⏱️ | **Complexity** | What's the Big-O? Can it be better? |
+| 🔗 | **Connect** | How does this relate to X? |
+
+Challenges are always grounded in what was just built — never random trivia.
+
+---
+
+## Progression System
 
 ```
 XP = base × difficulty × streak_multiplier
 ```
 
-- Streak bonus: up to **2.5×** for consecutive correct answers
-- Per-topic mastery: Apprentice → Practitioner → Expert → Master
-- Auto-adapts difficulty based on your rolling performance
-- Trophy wall in `~/.skill-issue/leaderboard.md`
+| Score | Meaning | Base XP |
+|---|---|---|
+| 0 | Wrong / Skipped | 0 |
+| 1 | Partial | 5 |
+| 2 | Correct | 12 |
+| 3 | Exceptional | 20 |
+
+**Difficulty multipliers:** 1× → 1.5× → 2× → 3× (Apprentice through Master)
+
+**Streak bonus:** up to **2.5×** for consecutive correct answers
+
+**Per-topic mastery:** each topic levels up independently based on your rolling accuracy.
+
+```
+Apprentice → Practitioner → Expert → Master
+```
 
 ---
 
 ## Commands
 
-Say these to the agent at any time:
+Say these to your agent at any time:
+
+| Command | Effect |
+|---|---|
+| `my stats` | XP, level, streak, topic breakdown |
+| `trophy wall` | Full leaderboard with progress bars |
+| `challenge me` | Force a challenge right now |
+| `harder` / `easier` | Shift difficulty up or down |
+| `focus mode` | Pause all challenges |
+| `hint` | Get a nudge (0.75× XP) |
+| `skip` | Skip — streak resets |
+
+---
+
+## Persistent State
+
+Everything lives in `~/.skill-issue/` — plain JSON/YAML, no database.
 
 ```
-my stats       → XP, level, streak
-harder         → bump difficulty
-focus mode     → pause all challenges
-challenge me   → force one right now
-trophy wall    → show leaderboard
+~/.skill-issue/
+├── profile.json        # XP, streak, topic levels, milestones
+├── config.yaml         # frequency, domains, difficulty bias
+├── leaderboard.md      # your trophy wall
+└── sessions/           # per-session challenge logs
+    └── 2026-02-27.json
+```
+
+Version-controllable. Portable. Human-readable.
+
+---
+
+## CLI Reference
+
+```bash
+skill-issue stats          # current profile summary
+skill-issue report         # regenerate trophy wall
+skill-issue export --format csv    # export history
+skill-issue export --format json
 ```
 
 ---
 
-## Why This Exists
+## Domains
 
-AI coding tools are incredible. They're also making it easy to ship code you don't understand.
+Built-in challenge banks for:
 
-Not because you're lazy — because the workflow doesn't give you a reason to engage. You're in flow, the code looks right, you move on.
+- **Algorithms & Data Structures** — complexity, correctness, tradeoffs
+- **Debugging** — spot the bug, trace the failure, fix it right
+- **System Design** — tradeoffs, scalability, architecture decisions
+- **ML / AI** — gradients, loss functions, architecture choices
+- **Python** — mutability, broadcasting, decorators, concurrency
 
-skill-issue adds that reason. It's the difference between watching someone solve a puzzle and solving it yourself.
+Extend with your own in `references/challenge-design.md`.
+
+---
+
+## Philosophy
+
+> *The name is a playful inversion. Claude has skills (literally, `.skill` files). But what about your skills?*
+
+Three beliefs underpin this:
+
+1. **Understanding compounds.** A developer who deeply understands the code they ship is 10× more effective long-term.
+2. **Interruption at the right moment.** One well-timed challenge beats a passive tutorial.
+3. **Personal, not competitive.** Your trophy wall tracks your own growth — no leaderboard against others.
 
 ---
 
 ## Contributing
 
-The challenge banks (in `references/challenge-design.md`) are just markdown — easy to extend for your domain. PRs welcome.
+The challenge banks (`references/challenge-design.md`) are just markdown — easy to extend for your domain. Scripts are plain Python with no dependencies.
 
-**MIT license.**
+See [CONTRIBUTING.md](CONTRIBUTING.md) or open an issue.
+
+**MIT License**
 
 ---
 
-*Works with Claude Code, Cursor, GitHub Copilot, and any agent that reads a system prompt.*
+<div align="center">
+  <sub>Works with Claude Code · Cursor · Codex · OpenCode · any agent that reads a system prompt</sub>
+</div>
