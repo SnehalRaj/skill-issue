@@ -1,0 +1,195 @@
+{
+  "domain": "machine-learning",
+  "description": "Classical Machine Learning fundamentals",
+  "nodes": [
+    {
+      "id": "gradient-descent",
+      "name": "Gradient Descent",
+      "description": "Iterative optimization algorithm for minimizing loss functions via gradient steps",
+      "reuse_weight": 0.99,
+      "aliases": ["SGD", "stochastic gradient descent", "optimizer", "backprop"],
+      "prerequisites": ["calculus", "linear-algebra"],
+      "related": ["learning-rate", "loss-functions", "regularization"],
+      "sources": ["Rumelhart 1986", "Bottou 2010"],
+      "challenge_hooks": [
+        "Why does SGD generalize better than full-batch gradient descent?",
+        "What is the vanishing gradient problem and when does it occur?",
+        "Derive the weight update rule for a single-layer network."
+      ]
+    },
+    {
+      "id": "bias-variance-tradeoff",
+      "name": "Bias-Variance Tradeoff",
+      "description": "Decomposition of prediction error into bias, variance, and irreducible noise",
+      "reuse_weight": 0.98,
+      "aliases": ["bias variance", "overfitting underfitting"],
+      "prerequisites": ["probability"],
+      "related": ["regularization", "cross-validation", "model-complexity"],
+      "sources": ["Geman 1992"],
+      "challenge_hooks": [
+        "A model has high training accuracy but low test accuracy. What is the likely cause?",
+        "How does increasing model complexity affect bias and variance separately?",
+        "Why does bagging reduce variance but not bias?"
+      ]
+    },
+    {
+      "id": "backpropagation",
+      "name": "Backpropagation",
+      "description": "Algorithm for computing gradients of a loss function through a neural network via chain rule",
+      "reuse_weight": 0.97,
+      "aliases": ["backprop", "chain rule", "reverse-mode autodiff"],
+      "prerequisites": ["gradient-descent", "calculus"],
+      "related": ["neural-networks", "computational-graphs"],
+      "sources": ["Rumelhart 1986"],
+      "challenge_hooks": [
+        "Walk through the chain rule for a 2-layer network computing dL/dW1.",
+        "What is the time complexity of a forward pass vs backward pass?",
+        "Why do ReLUs help with the vanishing gradient problem?"
+      ]
+    },
+    {
+      "id": "regularization",
+      "name": "Regularization",
+      "description": "Techniques to prevent overfitting: L1/L2 penalties, dropout, early stopping",
+      "reuse_weight": 0.95,
+      "aliases": ["L1", "L2", "lasso", "ridge", "weight decay", "dropout"],
+      "prerequisites": ["bias-variance-tradeoff", "loss-functions"],
+      "related": ["overfitting", "generalization"],
+      "sources": ["Tikhonov 1943", "Srivastava 2014"],
+      "challenge_hooks": [
+        "What geometric effect does L1 regularization have on the weight vector?",
+        "Why does L1 produce sparse solutions but L2 doesn't?",
+        "At what point should you apply early stopping?"
+      ]
+    },
+    {
+      "id": "cross-validation",
+      "name": "Cross-Validation",
+      "description": "Model evaluation technique that partitions data to estimate generalization performance",
+      "reuse_weight": 0.95,
+      "aliases": ["k-fold", "CV", "hold-out", "leave-one-out"],
+      "prerequisites": ["bias-variance-tradeoff"],
+      "related": ["hyperparameter-tuning", "model-selection"],
+      "sources": [],
+      "challenge_hooks": [
+        "Why is nested cross-validation necessary when tuning hyperparameters?",
+        "When would leave-one-out CV be a bad idea?",
+        "What's the risk of using test set performance to select between models?"
+      ]
+    },
+    {
+      "id": "loss-functions",
+      "name": "Loss Functions",
+      "description": "Objectives optimized during training: cross-entropy, MSE, hinge loss, KL divergence",
+      "reuse_weight": 0.95,
+      "aliases": ["objective function", "cost function", "cross-entropy", "MSE", "hinge loss"],
+      "prerequisites": ["probability"],
+      "related": ["gradient-descent", "classification", "regression"],
+      "sources": [],
+      "challenge_hooks": [
+        "Why is cross-entropy preferred over MSE for classification?",
+        "Derive cross-entropy loss from maximum likelihood estimation.",
+        "When would you use focal loss over standard cross-entropy?"
+      ]
+    },
+    {
+      "id": "attention-mechanism",
+      "name": "Attention & Transformers",
+      "description": "Scaled dot-product attention, multi-head attention, positional encoding, transformer architecture",
+      "reuse_weight": 0.95,
+      "aliases": ["self-attention", "transformer", "multi-head attention", "MHSA"],
+      "prerequisites": ["linear-algebra", "softmax"],
+      "related": ["embeddings", "positional-encoding"],
+      "sources": ["Vaswani 2017"],
+      "challenge_hooks": [
+        "What is the time complexity of self-attention with respect to sequence length?",
+        "Why is the dot product scaled by sqrt(d_k)?",
+        "What does each head in multi-head attention learn to focus on?"
+      ]
+    },
+    {
+      "id": "probability-distributions",
+      "name": "Probability Distributions",
+      "description": "Gaussian, Bernoulli, categorical, Dirichlet — their properties and when to use them",
+      "reuse_weight": 0.93,
+      "aliases": ["gaussian", "normal distribution", "Bernoulli", "softmax"],
+      "prerequisites": [],
+      "related": ["loss-functions", "bayesian-inference"],
+      "sources": [],
+      "challenge_hooks": [
+        "Why does softmax output a probability distribution?",
+        "What's the relationship between Gaussian likelihood and MSE loss?",
+        "When is the Dirichlet distribution used, and what does its parameter control?"
+      ]
+    },
+    {
+      "id": "embeddings",
+      "name": "Embeddings & Representations",
+      "description": "Dense vector representations of discrete objects; word2vec, PCA, t-SNE, contrastive learning",
+      "reuse_weight": 0.90,
+      "aliases": ["word2vec", "representations", "latent space", "feature space"],
+      "prerequisites": ["linear-algebra"],
+      "related": ["attention-mechanism", "dimensionality-reduction"],
+      "sources": ["Mikolov 2013"],
+      "challenge_hooks": [
+        "Why do word2vec embeddings capture semantic similarity?",
+        "What's the difference between PCA and t-SNE for visualization?",
+        "What does contrastive learning optimize, and why does it work?"
+      ]
+    },
+    {
+      "id": "hyperparameter-tuning",
+      "name": "Hyperparameter Tuning",
+      "description": "Grid search, random search, Bayesian optimization, learning rate schedules",
+      "reuse_weight": 0.88,
+      "aliases": ["grid search", "random search", "bayesian optimization", "HPO"],
+      "prerequisites": ["cross-validation"],
+      "related": ["model-selection", "regularization"],
+      "sources": ["Bergstra 2012"],
+      "challenge_hooks": [
+        "Why does random search outperform grid search in high dimensions?",
+        "What makes Bayesian optimization more sample-efficient?",
+        "How does cosine annealing differ from step decay?"
+      ]
+    },
+    {
+      "id": "decision-trees-ensembles",
+      "name": "Decision Trees & Ensembles",
+      "description": "Splitting criteria, random forests, gradient boosting (XGBoost), bagging vs boosting",
+      "reuse_weight": 0.88,
+      "aliases": ["random forest", "XGBoost", "gradient boosting", "GBDT", "bagging"],
+      "prerequisites": ["bias-variance-tradeoff"],
+      "related": ["feature-importance", "regularization"],
+      "sources": ["Breiman 2001", "Friedman 2001"],
+      "challenge_hooks": [
+        "What is the information gain splitting criterion, and what does it measure?",
+        "How does gradient boosting differ from bagging?",
+        "Why are random forests more robust to overfitting than single decision trees?"
+      ]
+    },
+    {
+      "id": "generalization-theory",
+      "name": "Generalization & Learning Theory",
+      "description": "PAC learning, VC dimension, double descent, grokking",
+      "reuse_weight": 0.82,
+      "aliases": ["PAC learning", "VC dimension", "double descent", "sample complexity"],
+      "prerequisites": ["bias-variance-tradeoff", "probability-distributions"],
+      "related": ["regularization", "model-complexity"],
+      "sources": ["Vapnik 1971", "Belkin 2019"],
+      "challenge_hooks": [
+        "What does VC dimension measure, and how does it relate to generalization?",
+        "Explain the double descent phenomenon. When does it occur?",
+        "What is grokking and why is it surprising?"
+      ]
+    }
+  ],
+  "edges": [
+    {"from": "gradient-descent", "to": "backpropagation", "type": "used-in"},
+    {"from": "backpropagation", "to": "attention-mechanism", "type": "prerequisite"},
+    {"from": "bias-variance-tradeoff", "to": "regularization", "type": "related"},
+    {"from": "bias-variance-tradeoff", "to": "cross-validation", "type": "related"},
+    {"from": "loss-functions", "to": "gradient-descent", "type": "used-in"},
+    {"from": "probability-distributions", "to": "loss-functions", "type": "prerequisite"},
+    {"from": "cross-validation", "to": "hyperparameter-tuning", "type": "used-in"}
+  ]
+}
