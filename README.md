@@ -18,31 +18,40 @@
 
 ---
 
-## The Problem
+AI coding tools let you ship code you don't understand. Not because you're lazy—there's just no friction. The code looks right, you move on, and slowly you stop reasoning from first principles.
 
-AI coding tools let you ship code you don't understand. Not because you're lazy—because there's no friction. The code looks right, you move on, and slowly you stop reasoning from first principles.
-
-**skill-issue** is a living pedagogical brain alongside your AI agent. It tracks which fundamental concepts you've actually mastered, challenges you at teaching moments, and makes sure your understanding grows with your codebase.
+skill-issue tracks what you actually know. When your agent builds something non-trivial, it fires a challenge grounded in what just happened. You answer, it scores you 0-3, and your knowledge graph updates. Next time, it targets concepts you're weak on.
 
 ---
 
-## How It Works
+## Install
+
+### Claude Code
+
+Two separate commands (don't combine them):
 
 ```
-You code → Agent builds something non-trivial → Challenge fires
-    ↓
-You answer → Score (0-3) → Knowledge graph updates
-    ↓
-Next challenge targets your weakest high-value concepts
+/plugin marketplace add SnehalRaj/skill-issue-marketplace
 ```
 
-The system prioritizes challenges on concepts that are both **fundamental** (high reuse_weight) and **unmastered** (low mastery). You stop getting quizzed on what you already know.
+```
+/plugin install skill-issue@skill-issue-marketplace
+```
+
+Open a new session.
+
+### pip (Cursor, Codex, any agent)
+
+```bash
+pip install skill-issue-cc
+skill-issue init
+```
+
+Paste the output of `skill-issue init --print` into your editor's system prompt.
 
 ---
 
 ## Knowledge Graph
-
-The hero feature. Each domain has a curated graph of fundamental concepts, weighted by how often they appear in real work.
 
 ```
 skill-issue graph show --domain machine-learning
@@ -66,17 +75,17 @@ Priority Queue (work on these next):
 Total nodes: 12 | Avg mastery: 0.10 | 0 mastered | 10 weak
 ```
 
-**How it works:**
-- **reuse_weight** (0.0–1.0): How fundamental this concept is. Higher = appears everywhere.
-- **mastery** (0.0–1.0): Your proven understanding, updated with EMA after each challenge.
-- **priority** = `reuse_weight × (1 - mastery)`. High-weight concepts you haven't proven yet = highest priority.
-- **Gentle decay**: Mastery slowly fades if you don't practice (3-day grace period, then 0.02/day).
+Each domain has a curated graph of concepts weighted by how often they come up in real work.
+
+- **reuse_weight** (0–1): How fundamental. 0.95 means it's everywhere.
+- **mastery** (0–1): Your proven understanding. Updates via EMA after each challenge.
+- **priority** = `weight × (1 - mastery)`. High-weight stuff you haven't proven = top priority.
+
+Mastery fades if you don't practice (3-day grace, then 0.02/day). Use it or lose it.
 
 ---
 
 ## Onboarding
-
-A 3-question interview that auto-infers your domains from plain English:
 
 ```
 skill-issue init
@@ -95,34 +104,7 @@ skill-issue init
 Knowledge graphs initialised for: machine-learning, backend-systems, algorithms
 ```
 
----
-
-## Install
-
-### Claude Code (native plugin)
-
-Run these as **two separate commands** in Claude Code — not on one line:
-
-```
-/plugin marketplace add SnehalRaj/skill-issue-marketplace
-```
-
-Then:
-
-```
-/plugin install skill-issue@skill-issue-marketplace
-```
-
-Open a new session. skill-issue activates automatically.
-
-### pip (works with Cursor, Codex, any agent)
-
-```bash
-pip install skill-issue-cc
-skill-issue init
-```
-
-Then paste the output of `skill-issue init --print` into your editor's system prompt or rules file.
+Three questions, plain English. It figures out which domains to load.
 
 ---
 
@@ -137,31 +119,31 @@ Then paste the output of `skill-issue init --print` into your editor's system pr
 | ⏱️ | **Complexity** | What's the Big-O? Can it be better? |
 | 🔗 | **Connect** | How does this relate to X? |
 
-Challenges are always grounded in what was just built — never random trivia.
+Challenges are grounded in what was just built. No random trivia.
 
 ---
 
 ## Commands
 
-| Command | Effect |
+| Command | What it does |
 |---|---|
-| `skill-issue init` | Onboarding interview + profile setup |
+| `skill-issue init` | Onboarding + profile setup |
 | `skill-issue stats` | XP, level, streak, topic breakdown |
-| `skill-issue graph show --domain <d>` | ASCII visualization of knowledge graph |
-| `skill-issue graph weak --domain <d>` | Top priority nodes to study |
-| `skill-issue graph web --domain <d>` | D3 force-directed graph in browser |
-| `skill-issue graph domains` | List all available domains |
-| `skill-issue graph update --node <n> --score <0-3> --domain <d>` | Update mastery after a challenge |
+| `skill-issue graph show --domain <d>` | ASCII viz |
+| `skill-issue graph weak --domain <d>` | Top priority nodes |
+| `skill-issue graph web --domain <d>` | D3 force graph in browser |
+| `skill-issue graph domains` | List available domains |
+| `skill-issue graph update --node <n> --score <0-3> --domain <d>` | Update mastery |
 | `skill-issue report` | Regenerate trophy wall |
 | `skill-issue export --format json` | Export history |
 
-**In-session voice commands** (say to your agent):
+**Voice commands** (say to your agent):
 
-| Say | Action |
+| Say | Does |
 |---|---|
-| `my stats` / `trophy wall` | Show profile / leaderboard |
-| `show graph` / `show brain` | Visualize knowledge graph |
-| `challenge me` | Force a challenge now |
+| `my stats` / `trophy wall` | Show profile |
+| `show graph` / `show brain` | Visualize knowledge |
+| `challenge me` | Force a challenge |
 | `harder` / `easier` | Shift difficulty ±1 |
 | `focus mode` | Pause challenges |
 | `hint` / `skip` | Hint (0.75× XP) / skip |
@@ -182,11 +164,11 @@ Challenges are always grounded in what was just built — never random trivia.
 | `design-systems` | 8 | Visual hierarchy, design tokens, typography, WCAG |
 | `mobile` | 8 | App lifecycle, state, navigation, offline-first |
 
-Add your own graphs in `references/knowledge_graphs/`.
+Add your own in `references/knowledge_graphs/`.
 
 ---
 
-## Progression System
+## Progression
 
 ```
 XP = base × difficulty × streak_multiplier
@@ -199,17 +181,15 @@ XP = base × difficulty × streak_multiplier
 | 2 | Correct | 12 |
 | 3 | Exceptional | 20 |
 
-**Difficulty multipliers:** Apprentice 1× → Practitioner 1.5× → Expert 2× → Master 3×
+Difficulty multipliers: Apprentice 1× → Practitioner 1.5× → Expert 2× → Master 3×
 
-**Streak bonus:** up to 2.5× for consecutive correct answers
-
-**Mastery update:** EMA with α=0.3 (recent performance weighted, history preserved)
+Streak bonus tops out at 2.5× for consecutive correct answers.
 
 ---
 
 ## Persistent State
 
-Everything lives in `~/.skill-issue/` — plain JSON/YAML, no database.
+Everything's in `~/.skill-issue/`. Plain JSON/YAML, no database.
 
 ```
 ~/.skill-issue/
@@ -227,19 +207,15 @@ Version-controllable. Portable. Human-readable.
 
 ## Philosophy
 
-> *The name is a playful inversion. Claude has skills (literally, `.skill` files). But what about your skills?*
+The name's a joke. Claude has skills (literally, `.skill` files). What about yours?
 
-Three beliefs underpin this:
-
-1. **Understanding compounds.** A developer who deeply understands the code they ship is 10× more effective long-term.
-2. **Interruption at the right moment.** One well-timed challenge beats a passive tutorial.
-3. **Personal, not competitive.** Your trophy wall tracks your own growth — no leaderboard against others.
+Understanding compounds. A developer who actually gets the code they ship is more effective long-term. One well-timed challenge beats a passive tutorial. Your trophy wall tracks your growth—no leaderboard against others.
 
 ---
 
 ## Contributing
 
-The knowledge graphs (`references/knowledge_graphs/`) are JSON — easy to add new domains or concepts. Scripts are plain Python with zero dependencies.
+Knowledge graphs are JSON in `references/knowledge_graphs/`. Scripts are plain Python, zero dependencies.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) or open an issue.
 
