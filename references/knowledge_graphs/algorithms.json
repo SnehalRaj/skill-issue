@@ -1,0 +1,127 @@
+{
+  "domain": "algorithms",
+  "version": 1,
+  "description": "Core algorithms and data structures knowledge graph",
+  "nodes": [
+    {
+      "id": "time-complexity",
+      "name": "Time Complexity",
+      "description": "Big-O analysis of algorithm running time as function of input size",
+      "reuse_weight": 0.99,
+      "aliases": ["Big-O", "runtime analysis", "asymptotic complexity", "O notation"],
+      "prerequisites": [],
+      "related": ["amortized-analysis", "recursion-trees"],
+      "sources": ["CLRS", "Skiena"],
+      "challenge_hooks": [
+        "Derive complexity from nested loops",
+        "Best/worst/average case distinctions",
+        "Common complexity classes and examples"
+      ]
+    },
+    {
+      "id": "dynamic-programming",
+      "name": "Dynamic Programming",
+      "description": "Optimization technique using overlapping subproblems and optimal substructure",
+      "reuse_weight": 0.95,
+      "aliases": ["DP", "dynamic prog", "tabulation", "bottom-up"],
+      "prerequisites": ["time-complexity", "memoization"],
+      "related": ["memoization", "recursion-trees"],
+      "sources": ["CLRS", "Bellman1957"],
+      "challenge_hooks": [
+        "Identify optimal substructure",
+        "State transition formulation",
+        "Space optimization techniques"
+      ]
+    },
+    {
+      "id": "memoization",
+      "name": "Memoization",
+      "description": "Caching function results to avoid redundant computation in recursive algorithms",
+      "reuse_weight": 0.90,
+      "aliases": ["memo", "caching", "top-down DP"],
+      "prerequisites": [],
+      "related": ["dynamic-programming", "recursion-trees", "hash-tables"],
+      "sources": ["CLRS"],
+      "challenge_hooks": [
+        "When to use memo vs tabulation?",
+        "Cache invalidation considerations",
+        "Memory vs time tradeoffs"
+      ]
+    },
+    {
+      "id": "binary-search",
+      "name": "Binary Search",
+      "description": "O(log n) search in sorted arrays by repeatedly halving search space",
+      "reuse_weight": 0.95,
+      "aliases": ["bisection", "binary search", "log search", "bisect"],
+      "prerequisites": ["time-complexity"],
+      "related": [],
+      "sources": ["CLRS", "Knuth"],
+      "challenge_hooks": [
+        "Off-by-one errors in implementation",
+        "Variants: lower_bound, upper_bound",
+        "Binary search on answer technique"
+      ]
+    },
+    {
+      "id": "graph-traversal",
+      "name": "Graph Traversal",
+      "description": "BFS and DFS algorithms for exploring graph structures",
+      "reuse_weight": 0.90,
+      "aliases": ["BFS", "DFS", "breadth-first", "depth-first", "graph search"],
+      "prerequisites": ["time-complexity"],
+      "related": ["hash-tables"],
+      "sources": ["CLRS", "Sedgewick"],
+      "challenge_hooks": [
+        "BFS vs DFS: when to use which?",
+        "Detecting cycles in directed vs undirected",
+        "Topological sort applications"
+      ]
+    },
+    {
+      "id": "hash-tables",
+      "name": "Hash Tables",
+      "description": "O(1) average-case lookup using hash functions and collision resolution",
+      "reuse_weight": 0.90,
+      "aliases": ["hashmap", "dictionary", "hash map", "hashing"],
+      "prerequisites": ["time-complexity", "amortized-analysis"],
+      "related": ["memoization"],
+      "sources": ["CLRS", "Knuth"],
+      "challenge_hooks": [
+        "Load factor and resizing",
+        "Collision resolution: chaining vs open addressing",
+        "Hash function design principles"
+      ]
+    },
+    {
+      "id": "recursion-trees",
+      "name": "Recursion Trees",
+      "description": "Visualization technique for analyzing divide-and-conquer recurrences",
+      "reuse_weight": 0.85,
+      "aliases": ["recursion tree", "recurrence analysis", "master theorem"],
+      "prerequisites": ["time-complexity"],
+      "related": ["dynamic-programming", "memoization"],
+      "sources": ["CLRS"],
+      "challenge_hooks": [
+        "Drawing recursion trees for T(n) = aT(n/b) + f(n)",
+        "Summing work across levels",
+        "Master theorem application"
+      ]
+    },
+    {
+      "id": "amortized-analysis",
+      "name": "Amortized Analysis",
+      "description": "Averaging operation costs over sequences to get tighter bounds",
+      "reuse_weight": 0.80,
+      "aliases": ["amortized", "aggregate analysis", "potential method"],
+      "prerequisites": ["time-complexity"],
+      "related": ["hash-tables", "dynamic-programming"],
+      "sources": ["CLRS", "Tarjan1985"],
+      "challenge_hooks": [
+        "Aggregate method for dynamic arrays",
+        "Accounting method intuition",
+        "Potential function design"
+      ]
+    }
+  ]
+}
