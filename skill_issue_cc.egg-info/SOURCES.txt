@@ -1,5 +1,6 @@
 README.md
 pyproject.toml
+skill_issue/SKILL.md
 skill_issue/__init__.py
 skill_issue/cli.py
 skill_issue/export_stats.py

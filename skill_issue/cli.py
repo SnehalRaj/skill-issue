@@ -8,35 +8,56 @@ import sys
 from pathlib import Path
 
 
-def cmd_init(args):
-    """Initialize ~/.skill-issue/ profile."""
-    from skill_issue.init_profile import init_profile
-    # Run onboarding interview if no domain specified
-    if not args.domains:
-        from skill_issue.onboarding import run_onboarding
-        from skill_issue.knowledge_state import KnowledgeState
-        domains = run_onboarding()
-        init_profile(
-            username=args.name or os.environ.get("USER", "human"),
-            domains=domains,
-            force=getattr(args, "force", False),
-        )
-        # Auto-init knowledge state for inferred domains
-        ks = KnowledgeState()
-        for domain in domains:
-            try:
-                ks.init_domain(domain)
-            except Exception:
-                pass
-    else:
-        domains = args.domains.split(",")
-        init_profile(
-            username=args.name or os.environ.get("USER", "human"),
-            domains=domains,
-            force=getattr(args, "force", False),
-        )
+def _get_skill_md_path() -> Path:
+    """Find SKILL.md - try package-relative first (pip install), then repo root (dev)."""
+    skill_md_path = Path(__file__).parent / "SKILL.md"
+    if not skill_md_path.exists():
+        skill_md_path = Path(__file__).parent.parent / "SKILL.md"
+    return skill_md_path
 
-    skill_md_path = Path(__file__).parent.parent / "SKILL.md"
+
+def cmd_init(args):
+    """Initialize ~/.skill-issue/ profile and/or inject into editor config."""
+    from skill_issue.init_profile import init_profile
+
+    skill_dir = Path.home() / ".skill-issue"
+    profile_exists = (skill_dir / "profile.json").exists()
+    wants_injection = args.claude or args.cursor or args.print_only
+    force = getattr(args, "force", False)
+
+    # Profile creation: only if profile doesn't exist or --force
+    if not profile_exists or force:
+        if not args.domains:
+            from skill_issue.onboarding import run_onboarding
+            from skill_issue.knowledge_state import KnowledgeState
+            domains = run_onboarding()
+            init_profile(
+                username=args.name or os.environ.get("USER", "human"),
+                domains=domains,
+                force=force,
+            )
+            # Auto-init knowledge state for inferred domains
+            ks = KnowledgeState()
+            for domain in domains:
+                try:
+                    ks.init_domain(domain)
+                except Exception:
+                    pass
+        else:
+            domains = args.domains.split(",")
+            init_profile(
+                username=args.name or os.environ.get("USER", "human"),
+                domains=domains,
+                force=force,
+            )
+    elif not wants_injection:
+        # Profile exists and no injection requested - just inform user
+        print(f"Profile already exists at {skill_dir}")
+        print("Use --force to reinitialize, or --claude/--cursor/--print to inject into editor.")
+        return
+
+    # Editor injection: always runs if requested, regardless of profile state
+    skill_md_path = _get_skill_md_path()
 
     if args.claude:
         _inject_into_file("CLAUDE.md", skill_md_path)
@@ -48,7 +69,10 @@ def cmd_init(args):
             print("Paste this into your editor's system prompt / rules file:")
             print("─" * 60)
             print(skill_md_path.read_text())
-    else:
+        else:
+            print(f"SKILL.md not found at {skill_md_path}")
+    elif not profile_exists or force:
+        # Only show next steps if we just created a profile
         print("\nNext step — activate in your editor:")
         print("  Claude Code:  skill-issue init --claude")
         print("  Cursor:       skill-issue init --cursor")

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: skill-issue-cc
-Version: 1.1.0
+Version: 1.2.0
 Summary: Gamified active learning system for agentic coding sessions
 License: MIT
 Keywords: claude,claude-code,ai,learning,gamification,spaced-repetition
