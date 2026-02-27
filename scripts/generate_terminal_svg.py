@@ -1,161 +1,117 @@
 #!/usr/bin/env python3
-"""Generate SVG screenshots of terminal output for README."""
+"""Generate SVG screenshots of terminal output for README.
+
+Uses the danger palette from terminal_style.py for consistent visual identity.
+"""
 
 import subprocess
 import html
+import os
+import sys
+
+# Add scripts dir to path for import
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from terminal_style import (
+    BACKGROUND,
+    PROMPT,
+    OUTPUT_TEXT,
+    MUTED_TEXT,
+    SCORE_HIGHLIGHT,
+    WEAK_NODE,
+    GOOD_NODE,
+    WARNING,
+    FONT_FAMILY,
+    WINDOW_BUTTON_COLORS,
+    BORDER_RADIUS,
+)
 
 
 def terminal_to_svg(output: str, title: str = "Terminal", width: int = 700) -> str:
-    """Convert terminal output to an SVG image with a macOS-style window chrome."""
+    """Convert terminal output to an SVG image with macOS-style window chrome.
+
+    Uses the sci-fi dystopian danger palette from terminal_style.py.
+    """
     lines = output.split('\n')
     line_height = 20
     padding = 20
     header_height = 40
     height = header_height + (len(lines) * line_height) + (padding * 2)
 
-    # ANSI color mapping
+    # Color mapping using danger palette
     colors = {
-        'default': '#c9d1d9',
-        'green': '#22c55e',
-        'yellow': '#eab308',
-        'red': '#ef4444',
+        'default': OUTPUT_TEXT,
+        'green': GOOD_NODE,
+        'yellow': WARNING,
+        'red': WEAK_NODE,
         'blue': '#3b82f6',
-        'magenta': '#a855f7',
+        'magenta': SCORE_HIGHLIGHT,  # Use amber for emphasis
         'cyan': '#06b6d4',
-        'gray': '#6b7280',
-        'orange': '#f97316',
+        'gray': MUTED_TEXT,
+        'orange': WARNING,
+        'prompt': PROMPT,
     }
-
-    def parse_ansi(text: str) -> list:
-        """Parse ANSI codes and return list of (text, color) tuples."""
-        import re
-        parts = []
-        current_color = 'default'
-
-        # Pattern for ANSI escape codes
-        ansi_pattern = re.compile(r'\x1b\[([0-9;]*)m')
-
-        last_end = 0
-        for match in ansi_pattern.finditer(text):
-            # Add text before this escape code
-            if match.start() > last_end:
-                parts.append((text[last_end:match.start()], current_color))
-
-            # Parse the escape code
-            code = match.group(1)
-            if code in ('0', ''):
-                current_color = 'default'
-            elif code == '32' or code == '1;32':
-                current_color = 'green'
-            elif code == '33' or code == '1;33':
-                current_color = 'yellow'
-            elif code == '31' or code == '1;31':
-                current_color = 'red'
-            elif code == '34' or code == '1;34':
-                current_color = 'blue'
-            elif code == '35' or code == '1;35':
-                current_color = 'magenta'
-            elif code == '36' or code == '1;36':
-                current_color = 'cyan'
-            elif code == '90' or code == '37':
-                current_color = 'gray'
-
-            last_end = match.end()
-
-        # Add remaining text
-        if last_end < len(text):
-            parts.append((text[last_end:], current_color))
-
-        return parts if parts else [(text, 'default')]
-
-    def render_line(text: str, y: int) -> str:
-        """Render a single line with color support."""
-        # Handle Unicode block characters for progress bars
-        text = text.replace('█', '█').replace('░', '░')
-
-        # Simple colored rendering based on content patterns
-        x = padding
-        spans = []
-
-        # Color [GOOD] green, [WEAK] orange
-        if '[GOOD]' in text:
-            text = text.replace('[GOOD]', '<tspan fill="#22c55e">[GOOD]</tspan>')
-        if '[WEAK]' in text:
-            text = text.replace('[WEAK]', '<tspan fill="#f97316">[WEAK]</tspan>')
-
-        # Color the progress bars
-        text = text.replace('████', '<tspan fill="#22c55e">████</tspan>')
-        text = text.replace('███', '<tspan fill="#22c55e">███</tspan>')
-        text = text.replace('██', '<tspan fill="#22c55e">██</tspan>')
-        text = text.replace('█', '<tspan fill="#22c55e">█</tspan>')
-        text = text.replace('░', '<tspan fill="#374151">░</tspan>')
-
-        # Color priority arrows
-        text = text.replace('▶', '<tspan fill="#eab308">▶</tspan>')
-
-        # Color header lines
-        if text.startswith('Knowledge Graph:') or text.startswith('Priority Queue'):
-            text = f'<tspan fill="#a855f7">{text}</tspan>'
-        if '=====' in text or '-----' in text:
-            text = f'<tspan fill="#6b7280">{text}</tspan>'
-
-        # Color stats output
-        if '🧠' in text or 'skill-issue' in text:
-            text = f'<tspan fill="#a855f7">{text}</tspan>'
-        if 'Level:' in text or 'Streak:' in text or 'Accuracy:' in text:
-            parts = text.split(':')
-            if len(parts) == 2:
-                text = f'<tspan fill="#6b7280">{parts[0]}:</tspan><tspan fill="#22c55e">{parts[1]}</tspan>'
-        if '🔥' in text:
-            text = text.replace('🔥', '<tspan fill="#f97316">🔥</tspan>')
-
-        return f'  <text x="{x}" y="{y}" fill="{colors["default"]}">{html.escape(text) if "<tspan" not in text else text}</text>'
 
     svg_lines = [
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}">',
         '  <defs>',
         '    <linearGradient id="header-grad" x1="0%" y1="0%" x2="0%" y2="100%">',
-        '      <stop offset="0%" style="stop-color:#3d3d3d"/>',
-        '      <stop offset="100%" style="stop-color:#2d2d2d"/>',
+        '      <stop offset="0%" style="stop-color:#1a1a1f"/>',
+        '      <stop offset="100%" style="stop-color:#0f0f12"/>',
         '    </linearGradient>',
         '  </defs>',
         '',
-        '  <!-- Window background -->',
-        f'  <rect width="{width}" height="{height}" rx="8" fill="#1a1b26"/>',
+        '  <!-- Window background with danger palette -->',
+        f'  <rect width="{width}" height="{height}" rx="{BORDER_RADIUS}" fill="{BACKGROUND}"/>',
         '',
         '  <!-- Window header -->',
-        f'  <rect width="{width}" height="{header_height}" rx="8" fill="url(#header-grad)"/>',
-        f'  <rect y="{header_height - 8}" width="{width}" height="8" fill="url(#header-grad)"/>',
+        f'  <rect width="{width}" height="{header_height}" rx="{BORDER_RADIUS}" fill="url(#header-grad)"/>',
+        f'  <rect y="{header_height - BORDER_RADIUS}" width="{width}" height="{BORDER_RADIUS}" fill="url(#header-grad)"/>',
         '',
         '  <!-- Traffic lights -->',
-        '  <circle cx="20" cy="20" r="6" fill="#ff5f57"/>',
-        '  <circle cx="40" cy="20" r="6" fill="#febc2e"/>',
-        '  <circle cx="60" cy="20" r="6" fill="#28c840"/>',
+        f'  <circle cx="20" cy="20" r="6" fill="{WINDOW_BUTTON_COLORS["close"]}"/>',
+        f'  <circle cx="40" cy="20" r="6" fill="{WINDOW_BUTTON_COLORS["minimize"]}"/>',
+        f'  <circle cx="60" cy="20" r="6" fill="{WINDOW_BUTTON_COLORS["maximize"]}"/>',
         '',
         '  <!-- Title -->',
-        f'  <text x="{width // 2}" y="25" text-anchor="middle" fill="#808080" font-family="SF Mono, Monaco, monospace" font-size="13">{html.escape(title)}</text>',
+        f'  <text x="{width // 2}" y="25" text-anchor="middle" fill="{MUTED_TEXT}" font-family="{FONT_FAMILY}" font-size="12">{html.escape(title)}</text>',
         '',
         '  <!-- Terminal content -->',
-        f'  <g font-family="SF Mono, Monaco, Consolas, monospace" font-size="13">',
+        f'  <g font-family="{FONT_FAMILY}" font-size="13">',
     ]
 
     y = header_height + padding + 15
     for line in lines:
-        # Escape HTML but preserve our tspan tags
+        # Escape HTML first
         safe_line = html.escape(line)
-        # Re-apply coloring after escaping
+
+        # Apply danger palette coloring
+
+        # [GOOD] = green, [WEAK] = danger red
         if '[GOOD]' in safe_line:
-            safe_line = safe_line.replace('[GOOD]', '<tspan fill="#22c55e">[GOOD]</tspan>')
+            safe_line = safe_line.replace('[GOOD]', f'<tspan fill="{GOOD_NODE}">[GOOD]</tspan>')
         if '[WEAK]' in safe_line:
-            safe_line = safe_line.replace('[WEAK]', '<tspan fill="#f97316">[WEAK]</tspan>')
+            safe_line = safe_line.replace('[WEAK]', f'<tspan fill="{WEAK_NODE}">[WEAK]</tspan>')
+
+        # Priority arrows = amber warning
         if '▶' in line:
-            safe_line = safe_line.replace('▶', '<tspan fill="#eab308">▶</tspan>')
+            safe_line = safe_line.replace('▶', f'<tspan fill="{WARNING}">▶</tspan>')
+
+        # Headers = amber for emphasis
         if safe_line.startswith('Knowledge Graph:') or safe_line.startswith('Priority Queue'):
-            safe_line = f'<tspan fill="#a855f7">{safe_line}</tspan>'
+            safe_line = f'<tspan fill="{SCORE_HIGHLIGHT}">{safe_line}</tspan>'
+
+        # Separators = muted
         if '=====' in safe_line or '-----' in safe_line:
-            safe_line = f'<tspan fill="#4b5563">{safe_line}</tspan>'
+            safe_line = f'<tspan fill="{MUTED_TEXT}">{safe_line}</tspan>'
+
+        # Stats with brain emoji = amber
         if '🧠' in safe_line:
-            safe_line = f'<tspan fill="#a855f7">{safe_line}</tspan>'
+            safe_line = f'<tspan fill="{SCORE_HIGHLIGHT}">{safe_line}</tspan>'
+
+        # Progress bars: full blocks = green, empty = muted
+        safe_line = safe_line.replace('█', f'<tspan fill="{GOOD_NODE}">█</tspan>')
+        safe_line = safe_line.replace('░', f'<tspan fill="{MUTED_TEXT}">░</tspan>')
 
         svg_lines.append(f'    <text x="{padding}" y="{y}" fill="{colors["default"]}">{safe_line}</text>')
         y += line_height
@@ -169,8 +125,6 @@ def terminal_to_svg(output: str, title: str = "Terminal", width: int = 700) -> s
 
 
 def main():
-    import os
-
     assets_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     screenshots_dir = os.path.join(assets_dir, 'assets', 'screenshots')
     os.makedirs(screenshots_dir, exist_ok=True)

@@ -1,67 +1,129 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
   <defs>
-    <linearGradient id="mascot-body" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#6366f1"/>
-      <stop offset="100%" style="stop-color:#4f46e5"/>
+    <!-- Purple brain gradient -->
+    <linearGradient id="brain-body" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#cc99ff"/>
+      <stop offset="100%" style="stop-color:#9966cc"/>
     </linearGradient>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+
+    <!-- Glow filter for disconnecting nodes -->
+    <filter id="node-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
       <feMerge>
-        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
+
+    <!-- Fade out filter for drifting nodes -->
+    <linearGradient id="fade-drift" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff3366;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#ff3366;stop-opacity:0.2"/>
+    </linearGradient>
   </defs>
 
-  <!-- Body - friendly blob shape -->
-  <ellipse cx="150" cy="170" rx="90" ry="100" fill="url(#mascot-body)"/>
+  <!-- Disconnecting neurons floating away (background) -->
+  <g filter="url(#node-glow)">
+    <!-- Drifting node 1 - top left, fading -->
+    <circle cx="45" cy="35" r="6" fill="#ff3366" opacity="0.3"/>
+    <line x1="45" y1="35" x2="80" y2="70" stroke="#ff3366" stroke-width="1" opacity="0.15" stroke-dasharray="4,4"/>
 
-  <!-- "Brain" bump on top -->
-  <ellipse cx="150" cy="85" rx="55" ry="40" fill="url(#mascot-body)"/>
-  <path d="M120,70 Q150,50 180,70" fill="none" stroke="#818cf8" stroke-width="3"/>
-  <path d="M130,60 Q150,45 170,60" fill="none" stroke="#a5b4fc" stroke-width="2"/>
+    <!-- Drifting node 2 - top right, more visible -->
+    <circle cx="255" cy="25" r="7" fill="#ff3366" opacity="0.5"/>
+    <line x1="255" y1="25" x2="220" y2="65" stroke="#ff3366" stroke-width="1" opacity="0.25" stroke-dasharray="4,4"/>
 
-  <!-- Eyes - curious/focused look -->
-  <ellipse cx="120" cy="140" rx="22" ry="25" fill="#f8fafc"/>
-  <ellipse cx="180" cy="140" rx="22" ry="25" fill="#f8fafc"/>
+    <!-- Drifting node 3 - far top, almost gone -->
+    <circle cx="150" cy="15" r="5" fill="#ff3366" opacity="0.2"/>
+    <line x1="150" y1="15" x2="150" y2="55" stroke="#ff3366" stroke-width="1" opacity="0.1" stroke-dasharray="4,4"/>
 
-  <!-- Pupils - looking slightly up (thinking) -->
-  <circle cx="123" cy="135" r="12" fill="#1e293b"/>
-  <circle cx="183" cy="135" r="12" fill="#1e293b"/>
+    <!-- Drifting node 4 - upper left -->
+    <circle cx="70" cy="55" r="5" fill="#ff3366" opacity="0.4"/>
+    <line x1="70" y1="55" x2="100" y2="85" stroke="#ff3366" stroke-width="1" opacity="0.2" stroke-dasharray="4,4"/>
 
-  <!-- Eye shine -->
-  <circle cx="127" cy="130" r="4" fill="#fff"/>
-  <circle cx="187" cy="130" r="4" fill="#fff"/>
-
-  <!-- Small smile -->
-  <path d="M130,185 Q150,200 170,185" fill="none" stroke="#1e1b4b" stroke-width="4" stroke-linecap="round"/>
-
-  <!-- Knowledge graph nodes floating around head -->
-  <g filter="url(#glow)">
-    <!-- Node 1 - strong (green) -->
-    <circle cx="55" cy="100" r="10" fill="#22c55e"/>
-    <line x1="55" y1="100" x2="95" y2="85" stroke="#22c55e" stroke-width="2" opacity="0.6"/>
-
-    <!-- Node 2 - medium (yellow) -->
-    <circle cx="245" cy="100" r="10" fill="#eab308"/>
-    <line x1="245" y1="100" x2="205" y2="85" stroke="#eab308" stroke-width="2" opacity="0.6"/>
-
-    <!-- Node 3 - weak (needs work - red/orange) -->
-    <circle cx="70" cy="60" r="8" fill="#f97316"/>
-    <line x1="70" y1="60" x2="100" y2="70" stroke="#f97316" stroke-width="2" opacity="0.6"/>
-
-    <!-- Node 4 - mastered (bright green) -->
-    <circle cx="230" cy="55" r="8" fill="#10b981"/>
-    <line x1="230" y1="55" x2="200" y2="70" stroke="#10b981" stroke-width="2" opacity="0.6"/>
-
-    <!-- Connection between nodes -->
-    <line x1="70" y1="60" x2="55" y2="100" stroke="#64748b" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.4"/>
+    <!-- Drifting node 5 - upper right -->
+    <circle cx="235" cy="60" r="6" fill="#ff3366" opacity="0.45"/>
+    <line x1="235" y1="60" x2="200" y2="90" stroke="#ff3366" stroke-width="1" opacity="0.2" stroke-dasharray="4,4"/>
   </g>
 
-  <!-- Small dumbbell in hand (gym reference) -->
-  <g transform="translate(230, 220) rotate(-15)">
-    <rect x="-25" y="-4" width="50" height="8" rx="4" fill="#64748b"/>
-    <rect x="-32" y="-10" width="12" height="20" rx="3" fill="#475569"/>
-    <rect x="20" y="-10" width="12" height="20" rx="3" fill="#475569"/>
+  <!-- Brain character body -->
+  <g transform="translate(150, 165)">
+    <!-- Main brain shape -->
+    <ellipse cx="0" cy="0" rx="75" ry="65" fill="url(#brain-body)"/>
+
+    <!-- Brain folds/wrinkles - simplified -->
+    <path d="M-50,-30 Q-30,-45 0,-30 Q30,-45 50,-30" fill="none" stroke="#8855aa" stroke-width="3" opacity="0.6"/>
+    <path d="M-40,-10 Q-20,-25 0,-10 Q20,-25 40,-10" fill="none" stroke="#8855aa" stroke-width="2" opacity="0.5"/>
+    <path d="M-55,10 Q-35,-5 -15,10" fill="none" stroke="#8855aa" stroke-width="2" opacity="0.4"/>
+    <path d="M15,10 Q35,-5 55,10" fill="none" stroke="#8855aa" stroke-width="2" opacity="0.4"/>
+
+    <!-- Glazed, unfocused eyes -->
+    <g transform="translate(-25, 5)">
+      <!-- Left eye - half-lidded, glazed -->
+      <ellipse cx="0" cy="0" rx="18" ry="14" fill="#1a1a1f"/>
+      <ellipse cx="0" cy="2" rx="14" ry="10" fill="#2a2a35"/>
+      <!-- Pupil - slightly dilated, unfocused -->
+      <circle cx="3" cy="3" r="7" fill="#0f0f12"/>
+      <!-- Tiny, dim reflection - glazed look -->
+      <circle cx="5" cy="0" r="2" fill="#555" opacity="0.4"/>
+      <!-- Heavy eyelid -->
+      <path d="M-18,-8 Q0,-14 18,-8 L18,-2 Q0,-10 -18,-2 Z" fill="#9966cc"/>
+    </g>
+
+    <g transform="translate(25, 5)">
+      <!-- Right eye - half-lidded, glazed -->
+      <ellipse cx="0" cy="0" rx="18" ry="14" fill="#1a1a1f"/>
+      <ellipse cx="0" cy="2" rx="14" ry="10" fill="#2a2a35"/>
+      <!-- Pupil - slightly dilated, unfocused -->
+      <circle cx="3" cy="3" r="7" fill="#0f0f12"/>
+      <!-- Tiny, dim reflection -->
+      <circle cx="5" cy="0" r="2" fill="#555" opacity="0.4"/>
+      <!-- Heavy eyelid -->
+      <path d="M-18,-8 Q0,-14 18,-8 L18,-2 Q0,-10 -18,-2 Z" fill="#9966cc"/>
+    </g>
+
+    <!-- Slack jaw / slightly open mouth -->
+    <ellipse cx="0" cy="40" rx="12" ry="8" fill="#1a1a1f"/>
+
+    <!-- Tiny arms -->
+    <!-- Left arm - limp -->
+    <path d="M-65,20 Q-85,35 -80,55" fill="none" stroke="#9966cc" stroke-width="8" stroke-linecap="round"/>
+    <!-- Left hand holding phone -->
+    <g transform="translate(-80, 60)">
+      <circle cx="0" cy="0" r="10" fill="#aa77cc"/>
+      <!-- Phone/device -->
+      <rect x="-15" y="-5" width="12" height="20" rx="2" fill="#1a1a1f" stroke="#333" stroke-width="1"/>
+      <!-- Screen glow -->
+      <rect x="-13" y="-2" width="8" height="14" fill="#0066ff" opacity="0.6"/>
+    </g>
+
+    <!-- Right arm - also limp -->
+    <path d="M65,20 Q85,35 80,55" fill="none" stroke="#9966cc" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="80" cy="60" r="10" fill="#aa77cc"/>
+  </g>
+
+  <!-- More disconnecting nodes around the brain -->
+  <g filter="url(#node-glow)">
+    <!-- Node breaking off from left side -->
+    <circle cx="55" cy="140" r="8" fill="#ff3366" opacity="0.7"/>
+    <line x1="55" y1="140" x2="85" y2="150" stroke="#ff3366" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.4"/>
+
+    <!-- Node breaking off from right side -->
+    <circle cx="245" cy="150" r="7" fill="#ff3366" opacity="0.6"/>
+    <line x1="245" y1="150" x2="215" y2="155" stroke="#ff3366" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.35"/>
+
+    <!-- Node below, drifting down -->
+    <circle cx="130" cy="260" r="6" fill="#ff3366" opacity="0.5"/>
+    <line x1="130" y1="260" x2="140" y2="230" stroke="#ff3366" stroke-width="1" stroke-dasharray="3,3" opacity="0.25"/>
+
+    <circle cx="180" cy="270" r="5" fill="#ff3366" opacity="0.4"/>
+    <line x1="180" y1="270" x2="170" y2="235" stroke="#ff3366" stroke-width="1" stroke-dasharray="3,3" opacity="0.2"/>
+  </g>
+
+  <!-- Subtle "signal lost" indicator near head -->
+  <g transform="translate(230, 95)" opacity="0.6">
+    <path d="M0,0 L8,-12 L16,0" fill="none" stroke="#ff3366" stroke-width="2"/>
+    <path d="M-4,5 L8,-15 L20,5" fill="none" stroke="#ff3366" stroke-width="1.5" opacity="0.5"/>
+    <line x1="8" y1="-12" x2="8" y2="8" stroke="#ff3366" stroke-width="2"/>
+    <line x1="4" y1="8" x2="12" y2="8" stroke="#ff3366" stroke-width="2"/>
   </g>
 </svg>

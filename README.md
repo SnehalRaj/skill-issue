@@ -1,10 +1,6 @@
 <div align="center">
 
-<img src="assets/logo.svg" width="120" alt="skill-issue logo" />
-
-<h1>skill-issue</h1>
-
-<img src="assets/demo/skill-issue-demo.gif" width="600" alt="skill-issue demo" />
+<img src="assets/logo.svg" width="600"/>
 
 <p>
   <a href="https://pypi.org/project/skill-issue-cc/"><img src="https://img.shields.io/pypi/v/skill-issue-cc?color=blue&label=pip" alt="PyPI" /></a>
@@ -15,48 +11,72 @@
   <a href="https://github.com/SnehalRaj/skill-issue/actions"><img src="https://img.shields.io/github/actions/workflow/status/SnehalRaj/skill-issue/test.yml?branch=main&label=tests" alt="Tests" /></a>
 </p>
 
-<p><strong>Your AI writes the code. But does your brain keep up?</strong></p>
+**When's the last time you solved a problem without asking first?**
+
+<img src="assets/demo/skill-issue-demo.gif" width="600" alt="skill-issue demo" />
 
 </div>
 
+<img src="assets/mascot.svg" width="120" align="right"/>
+
+You mass-accepted 200 Copilot suggestions last month. Quick: what's the time complexity of the sort you're using in production?
+
+Somewhere between "let me just ask Claude" and "wait, how does this work again," your debugging muscle quietly atrophied. You didn't notice. You were shipping.
+
+METR ran a study. Experienced developers using AI coding tools took 19% longer to complete tasks. They thought they were 20% faster. That's a 39-point gap between perception and reality. Anthropic found something worse: the more you use AI for code, the less you understand the code you're shipping. Comprehension decays faster than you'd expect, and you don't feel it happening because the tests still pass.
+
+The gap between what you think is happening and what's actually happening is called skill-issue.
+
 ---
 
-AI coding tools let you ship code you don't understand. The code looks right, you move on, and slowly you stop reasoning from first principles.
+skill-issue embeds micro-challenges directly into your agentic workflow. You ship code with Claude, then get quizzed on what just happened. Not trivia. Not LeetCode. The actual concepts in the code you just approved.
 
-skill-issue tracks what you actually know. When your agent builds something non-trivial, it fires a challenge grounded in what just happened. You answer, it scores you 0-3, your knowledge graph updates. Next time, it targets the gaps.
+![Knowledge graph showing mastery decay](assets/screenshots/graph-show.svg)
 
----
+Your knowledge lives in a graph. Nodes are concepts—weighted by how often they appear across real codebases. Edges connect prerequisites. Every challenge updates your mastery scores using spaced repetition: get it right, the node strengthens; get it wrong, it surfaces more often. The system knows what you're weak on before you do.
 
 ## Install
-
-### Claude Code
-
-Two separate commands (don't combine them):
-
-```
-/plugin marketplace add SnehalRaj/skill-issue-marketplace
-```
-
-```
-/plugin install skill-issue@skill-issue-marketplace
-```
-
-Open a new session.
-
-### pip (Cursor, Codex, any agent)
 
 ```bash
 pip install skill-issue-cc
 skill-issue init
 ```
 
-Paste the output of `skill-issue init --print` into your editor's system prompt.
+That's it.
+
+## Challenges
+
+| Type | What it tests |
+|------|---------------|
+| **Explain** | Describe what a code block does in plain English |
+| **Predict** | What's the output? What error will this throw? |
+| **Debug** | Here's a bug. Find it. |
+| **Refactor** | Make this better. Justify your changes. |
+| **Trace** | Walk through execution step by step |
+
+Every challenge is about the code you just shipped. The thing you just let Claude write.
+
+## Commands
+
+| Command | What it does |
+|---------|--------------|
+| `skill-issue challenge` | Generate a challenge from recent context |
+| `skill-issue stats` | Your current mastery scores |
+| `skill-issue graph show` | Render your knowledge graph |
+| `skill-issue graph weak` | Show your weakest nodes |
+| `skill-issue review` | Queue of concepts due for review |
+
+## Philosophy
+
+This is not a productivity tool. Your productivity is fine. It's your brain we're worried about.
+
+You hired a brilliant assistant who never explains anything. Now you're the person who can't do their job without them. That's not a skill issue—wait, no, that's exactly what that is.
+
+The name is the bit. Claude has skills. The question is whether you still do.
 
 ---
 
 ## Knowledge Graph
-
-<img src="assets/screenshots/graph-show.svg" width="700" alt="Knowledge graph visualization" />
 
 Each domain has a curated graph of concepts weighted by how often they come up in real work.
 
@@ -106,7 +126,7 @@ Grounded in what was just built. No random trivia.
 
 ---
 
-## Commands
+## Full Commands
 
 | Command | What it does |
 |---|---|
@@ -183,14 +203,6 @@ Streak bonus tops out at 2.5× for consecutive correct answers.
 ```
 
 Plain JSON/YAML. Version-controllable. No database.
-
----
-
-## Philosophy
-
-The name's a joke. Claude has skills (literally, `.skill` files). What about yours?
-
-Understanding compounds. One well-timed challenge beats an hour of passive tutorials. Your trophy wall tracks growth against yesterday's you—no leaderboard.
 
 ---
 
