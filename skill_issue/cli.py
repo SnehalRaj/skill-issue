@@ -11,12 +11,30 @@ from pathlib import Path
 def cmd_init(args):
     """Initialize ~/.skill-issue/ profile."""
     from skill_issue.init_profile import init_profile
-    domains = args.domains.split(",") if args.domains else ["algorithms", "debugging", "design"]
-    init_profile(
-        username=args.name or os.environ.get("USER", "human"),
-        domains=domains,
-        force=getattr(args, "force", False),
-    )
+    # Run onboarding interview if no domain specified
+    if not args.domains:
+        from skill_issue.onboarding import run_onboarding
+        from skill_issue.knowledge_state import KnowledgeState
+        domains = run_onboarding()
+        init_profile(
+            username=args.name or os.environ.get("USER", "human"),
+            domains=domains,
+            force=getattr(args, "force", False),
+        )
+        # Auto-init knowledge state for inferred domains
+        ks = KnowledgeState()
+        for domain in domains:
+            try:
+                ks.init_domain(domain)
+            except Exception:
+                pass
+    else:
+        domains = args.domains.split(",")
+        init_profile(
+            username=args.name or os.environ.get("USER", "human"),
+            domains=domains,
+            force=getattr(args, "force", False),
+        )
 
     skill_md_path = Path(__file__).parent.parent / "SKILL.md"
 
@@ -224,12 +242,8 @@ def cmd_graph_decay(args):
 
 def cmd_graph_domains(args):
     """List available knowledge graph domains."""
-    from skill_issue.knowledge_state import list_domains, load_graph
-    domains = list_domains()
-    print("Available domains:")
-    for d in domains:
-        graph = load_graph(d)
-        print(f"  {d}: {len(graph['nodes'])} nodes")
+    from skill_issue.onboarding import print_available_domains
+    print_available_domains()
 
 
 def main():

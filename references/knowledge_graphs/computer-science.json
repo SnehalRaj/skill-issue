@@ -1,0 +1,194 @@
+{
+  "domain": "computer-science",
+  "description": "Core Computer Science fundamentals — the concepts every engineer revisits forever",
+  "nodes": [
+    {
+      "id": "time-space-complexity",
+      "name": "Time & Space Complexity",
+      "description": "Big-O, Big-Theta, Big-Omega notation; worst/average/best case analysis",
+      "reuse_weight": 0.99,
+      "aliases": ["Big-O", "big-oh", "complexity", "O(n)", "asymptotic analysis"],
+      "prerequisites": [],
+      "related": ["recursion", "sorting", "dynamic-programming"],
+      "sources": ["CLRS"],
+      "challenge_hooks": [
+        "What is the time complexity of binary search and why?",
+        "Why is amortized O(1) for dynamic array append still considered O(1)?",
+        "When does O(n log n) sorting beat O(n²) in practice?"
+      ]
+    },
+    {
+      "id": "recursion-and-induction",
+      "name": "Recursion & Mathematical Induction",
+      "description": "Recursive thinking, base cases, recurrence relations, master theorem",
+      "reuse_weight": 0.97,
+      "aliases": ["recursion", "recurrence", "master theorem", "induction"],
+      "prerequisites": [],
+      "related": ["dynamic-programming", "divide-and-conquer", "trees"],
+      "sources": ["CLRS"],
+      "challenge_hooks": [
+        "Solve T(n) = 2T(n/2) + n using the master theorem.",
+        "What's the difference between tail recursion and regular recursion?",
+        "Why can infinite recursion occur even with a base case?"
+      ]
+    },
+    {
+      "id": "dynamic-programming",
+      "name": "Dynamic Programming",
+      "description": "Memoization and tabulation for overlapping subproblems with optimal substructure",
+      "reuse_weight": 0.97,
+      "aliases": ["DP", "memoization", "tabulation", "optimal substructure"],
+      "prerequisites": ["recursion-and-induction"],
+      "related": ["greedy-algorithms", "graphs"],
+      "sources": ["Bellman 1957"],
+      "challenge_hooks": [
+        "What two properties must a problem have to be solvable with DP?",
+        "When should you use top-down memoization vs bottom-up tabulation?",
+        "Trace through the longest common subsequence DP table for 'ABCD' and 'ACBD'."
+      ]
+    },
+    {
+      "id": "data-structures",
+      "name": "Core Data Structures",
+      "description": "Arrays, linked lists, stacks, queues, heaps, hash tables — operations and tradeoffs",
+      "reuse_weight": 0.98,
+      "aliases": ["hash table", "heap", "linked list", "stack", "queue", "array"],
+      "prerequisites": [],
+      "related": ["time-space-complexity", "trees-graphs"],
+      "sources": ["CLRS"],
+      "challenge_hooks": [
+        "Why is hash table lookup O(1) amortized but not guaranteed?",
+        "When would you prefer a heap over a sorted array?",
+        "What is cache locality and how do arrays exploit it better than linked lists?"
+      ]
+    },
+    {
+      "id": "trees-graphs",
+      "name": "Trees & Graph Algorithms",
+      "description": "BFS, DFS, Dijkstra, Bellman-Ford, topological sort, spanning trees",
+      "reuse_weight": 0.97,
+      "aliases": ["BFS", "DFS", "Dijkstra", "graph traversal", "topological sort", "MST"],
+      "prerequisites": ["data-structures", "recursion-and-induction"],
+      "related": ["dynamic-programming", "greedy-algorithms"],
+      "sources": ["CLRS"],
+      "challenge_hooks": [
+        "When does Dijkstra fail, and why does Bellman-Ford handle it?",
+        "What is the time complexity of BFS on a graph with V vertices and E edges?",
+        "How do you detect a cycle in a directed graph using DFS?"
+      ]
+    },
+    {
+      "id": "sorting-searching",
+      "name": "Sorting & Searching",
+      "description": "Merge sort, quicksort, heapsort, binary search — correctness and complexity proofs",
+      "reuse_weight": 0.95,
+      "aliases": ["merge sort", "quicksort", "binary search", "heapsort"],
+      "prerequisites": ["time-space-complexity", "recursion-and-induction"],
+      "related": ["divide-and-conquer"],
+      "sources": ["CLRS"],
+      "challenge_hooks": [
+        "Why is quicksort O(n²) worst-case but O(n log n) average-case?",
+        "Prove that comparison-based sorting cannot do better than O(n log n).",
+        "When is insertion sort faster than merge sort?"
+      ]
+    },
+    {
+      "id": "greedy-algorithms",
+      "name": "Greedy Algorithms",
+      "description": "Greedy choice property, exchange arguments, Huffman coding, interval scheduling",
+      "reuse_weight": 0.88,
+      "aliases": ["greedy", "greedy choice", "Huffman", "interval scheduling"],
+      "prerequisites": ["dynamic-programming"],
+      "related": ["dynamic-programming", "trees-graphs"],
+      "sources": ["CLRS"],
+      "challenge_hooks": [
+        "How do you prove a greedy algorithm is correct using an exchange argument?",
+        "Why does Dijkstra's algorithm use a greedy strategy?",
+        "When does greedy fail where DP succeeds? Give an example."
+      ]
+    },
+    {
+      "id": "operating-systems",
+      "name": "Operating Systems Concepts",
+      "description": "Processes, threads, scheduling, virtual memory, deadlocks, semaphores",
+      "reuse_weight": 0.90,
+      "aliases": ["process", "thread", "scheduling", "virtual memory", "deadlock", "semaphore", "mutex"],
+      "prerequisites": [],
+      "related": ["concurrency", "computer-architecture"],
+      "sources": ["Silberschatz"],
+      "challenge_hooks": [
+        "What is the difference between a process and a thread?",
+        "Describe the four conditions required for deadlock (Coffman conditions).",
+        "How does virtual memory allow programs to use more RAM than physically available?"
+      ]
+    },
+    {
+      "id": "concurrency",
+      "name": "Concurrency & Parallelism",
+      "description": "Race conditions, locks, semaphores, atomicity, memory models, lock-free structures",
+      "reuse_weight": 0.92,
+      "aliases": ["race condition", "mutex", "lock", "atomic", "thread-safe", "parallel"],
+      "prerequisites": ["operating-systems"],
+      "related": ["data-structures"],
+      "sources": [],
+      "challenge_hooks": [
+        "What is a race condition? Give a concrete example with two threads.",
+        "What's the difference between a mutex and a semaphore?",
+        "Why can reordering instructions cause bugs in concurrent programs?"
+      ]
+    },
+    {
+      "id": "computer-architecture",
+      "name": "Computer Architecture",
+      "description": "CPU pipeline, cache hierarchy, branch prediction, SIMD, memory bandwidth",
+      "reuse_weight": 0.85,
+      "aliases": ["cache", "CPU pipeline", "branch prediction", "SIMD", "cache line", "L1 L2 L3"],
+      "prerequisites": [],
+      "related": ["concurrency", "time-space-complexity"],
+      "sources": ["Patterson & Hennessy"],
+      "challenge_hooks": [
+        "Why does iterating a 2D array row-by-row run faster than column-by-column?",
+        "What is branch misprediction and how does it affect performance?",
+        "Explain why binary search on a sorted array can be slower than linear scan for small n."
+      ]
+    },
+    {
+      "id": "networking",
+      "name": "Networking & Protocols",
+      "description": "TCP/IP, HTTP, DNS, TLS, latency vs throughput, CAP theorem",
+      "reuse_weight": 0.88,
+      "aliases": ["TCP", "HTTP", "DNS", "TLS", "REST", "latency", "throughput"],
+      "prerequisites": [],
+      "related": ["operating-systems", "distributed-systems"],
+      "sources": [],
+      "challenge_hooks": [
+        "What does the 3-way TCP handshake accomplish?",
+        "Why does TLS add latency and how does TLS 1.3 reduce it?",
+        "Explain the CAP theorem with a concrete distributed system example."
+      ]
+    },
+    {
+      "id": "computational-complexity",
+      "name": "Computational Complexity",
+      "description": "P vs NP, NP-completeness, reductions, approximation algorithms",
+      "reuse_weight": 0.82,
+      "aliases": ["P vs NP", "NP-complete", "NP-hard", "reduction", "polynomial time"],
+      "prerequisites": ["time-space-complexity", "greedy-algorithms"],
+      "related": ["dynamic-programming"],
+      "sources": ["Sipser"],
+      "challenge_hooks": [
+        "What is the difference between NP and NP-complete?",
+        "How would you prove a problem is NP-hard?",
+        "Why would P=NP break cryptography?"
+      ]
+    }
+  ],
+  "edges": [
+    {"from": "recursion-and-induction", "to": "dynamic-programming", "type": "prerequisite"},
+    {"from": "dynamic-programming", "to": "greedy-algorithms", "type": "related"},
+    {"from": "data-structures", "to": "trees-graphs", "type": "prerequisite"},
+    {"from": "time-space-complexity", "to": "sorting-searching", "type": "used-in"},
+    {"from": "operating-systems", "to": "concurrency", "type": "prerequisite"},
+    {"from": "concurrency", "to": "data-structures", "type": "related"}
+  ]
+}
