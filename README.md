@@ -68,6 +68,18 @@ skill-issue init
 
 That's it.
 
+### Starting from your history
+
+Already have Claude Code sessions? Don't start from zero:
+
+```bash
+skill-issue analyze --all
+```
+
+The analyzer scans your conversation history and infers initial mastery scores. Questions you asked → weakness signal. Code you wrote → strength signal. Your knowledge graph starts calibrated to reality, not a blank slate.
+
+During `skill-issue init`, you'll be prompted to run this automatically.
+
 ---
 
 ## Challenge Types
@@ -90,6 +102,7 @@ Grounded in what was just built. No random trivia.
 | Command | What it does |
 |---|---|
 | `skill-issue init` | Onboarding + profile setup |
+| `skill-issue analyze` | Bootstrap mastery from Claude Code history |
 | `skill-issue stats` | XP, level, streak, topic breakdown |
 | `skill-issue graph show --domain <d>` | ASCII viz |
 | `skill-issue graph weak --domain <d>` | Top priority nodes |
