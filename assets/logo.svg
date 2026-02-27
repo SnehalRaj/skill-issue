@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" width="800" height="200">
+  <defs>
+    <!-- Danger gradient: warning red-pink to amber -->
+    <linearGradient id="danger-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff3366"/>
+      <stop offset="100%" style="stop-color:#ff9900"/>
+    </linearGradient>
+
+    <!-- Battery gradient showing critical low -->
+    <linearGradient id="battery-critical" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff3366"/>
+      <stop offset="12%" style="stop-color:#ff3366"/>
+      <stop offset="12%" style="stop-color:#1a1a1f"/>
+      <stop offset="100%" style="stop-color:#1a1a1f"/>
+    </linearGradient>
+
+    <!-- Glitch filter for subtle distortion -->
+    <filter id="glitch-noise" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <!-- Dark background -->
+  <rect width="800" height="200" fill="#0a0a0f"/>
+
+  <!-- Subtle scan lines -->
+  <g opacity="0.03">
+    <line x1="0" y1="20" x2="800" y2="20" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="40" x2="800" y2="40" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="60" x2="800" y2="60" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="80" x2="800" y2="80" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="100" x2="800" y2="100" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="120" x2="800" y2="120" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="140" x2="800" y2="140" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="160" x2="800" y2="160" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="180" x2="800" y2="180" stroke="#fff" stroke-width="1"/>
+  </g>
+
+  <!-- Brain icon with low battery -->
+  <g transform="translate(60, 100)">
+    <!-- Glitch layer (cyan offset) -->
+    <g transform="translate(2, -1)" opacity="0.4">
+      <path d="M-35,-40 C-55,-40 -60,-20 -60,5 C-60,30 -45,45 -20,45 C-5,45 0,35 0,25 L0,-40 C0,-40 -15,-40 -35,-40"
+            fill="none" stroke="#00ffff" stroke-width="2.5"/>
+      <path d="M35,-40 C55,-40 60,-20 60,5 C60,30 45,45 20,45 C5,45 0,35 0,25 L0,-40 C0,-40 15,-40 35,-40"
+            fill="none" stroke="#00ffff" stroke-width="2.5"/>
+    </g>
+
+    <!-- Main brain outline -->
+    <g fill="none" stroke="url(#danger-gradient)" stroke-width="3" stroke-linecap="round">
+      <!-- Left hemisphere -->
+      <path d="M-35,-40 C-55,-40 -60,-20 -60,5 C-60,30 -45,45 -20,45 C-5,45 0,35 0,25"/>
+      <path d="M-40,-25 C-50,-15 -50,5 -40,20"/>
+      <path d="M-25,-30 C-35,-20 -35,5 -25,15"/>
+
+      <!-- Right hemisphere -->
+      <path d="M35,-40 C55,-40 60,-20 60,5 C60,30 45,45 20,45 C5,45 0,35 0,25"/>
+      <path d="M40,-25 C50,-15 50,5 40,20"/>
+      <path d="M25,-30 C35,-20 35,5 25,15"/>
+
+      <!-- Center stem -->
+      <path d="M0,-40 L0,25"/>
+    </g>
+
+    <!-- Battery indicator at bottom of brain -->
+    <g transform="translate(0, 55)">
+      <rect x="-25" y="-8" width="50" height="16" rx="3" fill="none" stroke="#ff3366" stroke-width="1.5"/>
+      <rect x="-22" y="-5" width="6" height="10" fill="#ff3366"/> <!-- 12% fill -->
+      <rect x="25" y="-4" width="4" height="8" rx="1" fill="#ff3366" opacity="0.5"/> <!-- Battery terminal -->
+      <!-- Percentage text -->
+      <text x="5" y="4" font-family="'Courier New', monospace" font-size="10" fill="#ff3366" text-anchor="middle">12%</text>
+    </g>
+  </g>
+
+  <!-- Glitch text layer (cyan, offset) -->
+  <text x="152" y="113"
+        font-family="'Courier New', 'Consolas', monospace"
+        font-size="64"
+        font-weight="900"
+        letter-spacing="6"
+        fill="#00ffff"
+        opacity="0.35">skill-issue</text>
+
+  <!-- Glitch text layer (magenta, offset opposite) -->
+  <text x="148" y="117"
+        font-family="'Courier New', 'Consolas', monospace"
+        font-size="64"
+        font-weight="900"
+        letter-spacing="6"
+        fill="#ff00ff"
+        opacity="0.25">skill-issue</text>
+
+  <!-- Main text with gradient -->
+  <text x="150" y="115"
+        font-family="'Courier New', 'Consolas', monospace"
+        font-size="64"
+        font-weight="900"
+        letter-spacing="6"
+        fill="url(#danger-gradient)">skill-issue</text>
+
+  <!-- Glitch slice effect - horizontal displacement -->
+  <g clip-path="url(#slice-clip)">
+    <text x="154" y="115"
+          font-family="'Courier New', 'Consolas', monospace"
+          font-size="64"
+          font-weight="900"
+          letter-spacing="6"
+          fill="#00ffff"
+          opacity="0.6">skill-issue</text>
+  </g>
+  <defs>
+    <clipPath id="slice-clip">
+      <rect x="0" y="95" width="800" height="8"/>
+    </clipPath>
+  </defs>
+
+  <!-- Warning indicator -->
+  <g transform="translate(720, 100)">
+    <polygon points="0,-30 26,20 -26,20" fill="none" stroke="#ff3366" stroke-width="2"/>
+    <text x="0" y="10" font-family="'Courier New', monospace" font-size="32" font-weight="bold" fill="#ff3366" text-anchor="middle">!</text>
+  </g>
+
+  <!-- Subtle vignette effect at edges -->
+  <rect width="800" height="200" fill="url(#vignette)" pointer-events="none"/>
+  <defs>
+    <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
+      <stop offset="60%" style="stop-color:transparent"/>
+      <stop offset="100%" style="stop-color:#0a0a0f"/>
+    </radialGradient>
+  </defs>
+</svg>

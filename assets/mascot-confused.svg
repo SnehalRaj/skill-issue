@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <!-- Purple brain gradient -->
+    <linearGradient id="brain-body" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#cc99ff"/>
+      <stop offset="100%" style="stop-color:#9966cc"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Screen with error -->
+  <g transform="translate(100, 35)">
+    <rect x="-45" y="-25" width="90" height="50" rx="3" fill="#1a1a1f" stroke="#333" stroke-width="1"/>
+    <!-- Screen content - stack trace -->
+    <text x="-40" y="-12" font-family="monospace" font-size="5" fill="#ff3366">TypeError: undefined is not</text>
+    <text x="-40" y="-5" font-family="monospace" font-size="5" fill="#ff3366">  at Object.&lt;anonymous&gt;</text>
+    <text x="-40" y="2" font-family="monospace" font-size="5" fill="#ff9900">  at Module._compile</text>
+    <text x="-40" y="9" font-family="monospace" font-size="5" fill="#666">  at node:internal/...</text>
+    <text x="-40" y="16" font-family="monospace" font-size="5" fill="#666">  at ??? </text>
+  </g>
+
+  <!-- Brain character body -->
+  <g transform="translate(100, 120)">
+    <!-- Main brain shape -->
+    <ellipse cx="0" cy="0" rx="50" ry="43" fill="url(#brain-body)"/>
+
+    <!-- Brain folds/wrinkles -->
+    <path d="M-33,-20 Q-20,-30 0,-20 Q20,-30 33,-20" fill="none" stroke="#8855aa" stroke-width="2" opacity="0.6"/>
+    <path d="M-27,-7 Q-13,-17 0,-7 Q13,-17 27,-7" fill="none" stroke="#8855aa" stroke-width="1.5" opacity="0.5"/>
+
+    <!-- Blank, confused eyes - wide and empty -->
+    <g transform="translate(-17, 0)">
+      <!-- Left eye - wide open, blank -->
+      <ellipse cx="0" cy="0" rx="13" ry="11" fill="#1a1a1f"/>
+      <ellipse cx="0" cy="0" rx="10" ry="9" fill="#2a2a35"/>
+      <!-- Tiny pupil - dilated/confused -->
+      <circle cx="0" cy="0" r="3" fill="#0f0f12"/>
+      <!-- Dim reflection -->
+      <circle cx="1" cy="-1" r="1" fill="#555" opacity="0.3"/>
+    </g>
+
+    <g transform="translate(17, 0)">
+      <!-- Right eye - wide open, blank -->
+      <ellipse cx="0" cy="0" rx="13" ry="11" fill="#1a1a1f"/>
+      <ellipse cx="0" cy="0" rx="10" ry="9" fill="#2a2a35"/>
+      <circle cx="0" cy="0" r="3" fill="#0f0f12"/>
+      <circle cx="1" cy="-1" r="1" fill="#555" opacity="0.3"/>
+    </g>
+
+    <!-- Confused mouth - flat line -->
+    <line x1="-8" y1="25" x2="8" y2="25" stroke="#1a1a1f" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Confused eyebrows -->
+    <path d="M-28,-15 Q-20,-12 -8,-15" fill="none" stroke="#8855aa" stroke-width="2" opacity="0.8"/>
+    <path d="M8,-15 Q20,-12 28,-15" fill="none" stroke="#8855aa" stroke-width="2" opacity="0.8"/>
+
+    <!-- Limp arms - defeated -->
+    <path d="M-43,13 Q-60,25 -55,45" fill="none" stroke="#9966cc" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="-55" cy="48" r="7" fill="#aa77cc"/>
+
+    <path d="M43,13 Q60,25 55,45" fill="none" stroke="#9966cc" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="55" cy="48" r="7" fill="#aa77cc"/>
+  </g>
+
+  <!-- Empty thought bubble -->
+  <g transform="translate(160, 90)">
+    <!-- Bubble trail -->
+    <circle cx="-25" cy="15" r="4" fill="#2a2a35" stroke="#444" stroke-width="0.5"/>
+    <circle cx="-15" cy="5" r="6" fill="#2a2a35" stroke="#444" stroke-width="0.5"/>
+    <!-- Main bubble - completely empty -->
+    <ellipse cx="10" cy="-15" rx="25" ry="18" fill="#2a2a35" stroke="#444" stroke-width="1"/>
+    <!-- Literally nothing inside - just empty space -->
+  </g>
+
+  <!-- Question marks floating -->
+  <g opacity="0.4">
+    <text x="25" y="95" font-family="sans-serif" font-size="16" fill="#ff3366" font-weight="bold">?</text>
+    <text x="40" y="110" font-family="sans-serif" font-size="12" fill="#ff3366">?</text>
+  </g>
+
+  <!-- Sweat drop -->
+  <path d="M55,95 Q60,85 58,95 Q56,100 55,95" fill="#66ccff" opacity="0.7"/>
+</svg>
