@@ -9,10 +9,13 @@ from pathlib import Path
 
 
 def _get_skill_md_path() -> Path:
-    """Find SKILL.md - try package-relative first (pip install), then repo root (dev)."""
+    """Find SKILL.md - try package-relative first (pip install), then skills/ dir (dev)."""
+    # 1. Package-relative: works for pip install (symlink resolved at build time)
     skill_md_path = Path(__file__).parent / "SKILL.md"
-    if not skill_md_path.exists():
-        skill_md_path = Path(__file__).parent.parent / "SKILL.md"
+    if skill_md_path.exists():
+        return skill_md_path
+    # 2. Canonical skills/ directory: works for dev mode (repo checkout)
+    skill_md_path = Path(__file__).parent.parent / "skills" / "skill-issue" / "SKILL.md"
     return skill_md_path
 
 
