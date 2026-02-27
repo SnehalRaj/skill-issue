@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <!-- Purple brain gradient -->
+    <linearGradient id="brain-body" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#cc99ff"/>
+      <stop offset="100%" style="stop-color:#9966cc"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Brain character body -->
+  <g transform="translate(100, 95)">
+    <!-- Main brain shape -->
+    <ellipse cx="0" cy="0" rx="50" ry="43" fill="url(#brain-body)"/>
+
+    <!-- Brain folds/wrinkles -->
+    <path d="M-33,-20 Q-20,-30 0,-20 Q20,-30 33,-20" fill="none" stroke="#8855aa" stroke-width="2" opacity="0.6"/>
+    <path d="M-27,-7 Q-13,-17 0,-7 Q13,-17 27,-7" fill="none" stroke="#8855aa" stroke-width="1.5" opacity="0.5"/>
+
+    <!-- Happy, half-closed eyes - blissfully unaware -->
+    <g transform="translate(-17, 3)">
+      <!-- Left eye - happy squint -->
+      <ellipse cx="0" cy="0" rx="12" ry="9" fill="#1a1a1f"/>
+      <ellipse cx="0" cy="1" rx="9" ry="7" fill="#2a2a35"/>
+      <!-- Pupil -->
+      <circle cx="0" cy="2" r="5" fill="#0f0f12"/>
+      <!-- Happy reflection -->
+      <circle cx="2" cy="0" r="1.5" fill="#fff" opacity="0.6"/>
+      <!-- Happy squint eyelid -->
+      <path d="M-12,-5 Q0,-9 12,-5 L12,3 Q0,-4 -12,3 Z" fill="#9966cc"/>
+    </g>
+
+    <g transform="translate(17, 3)">
+      <!-- Right eye - happy squint -->
+      <ellipse cx="0" cy="0" rx="12" ry="9" fill="#1a1a1f"/>
+      <ellipse cx="0" cy="1" rx="9" ry="7" fill="#2a2a35"/>
+      <circle cx="0" cy="2" r="5" fill="#0f0f12"/>
+      <circle cx="2" cy="0" r="1.5" fill="#fff" opacity="0.6"/>
+      <path d="M-12,-5 Q0,-9 12,-5 L12,3 Q0,-4 -12,3 Z" fill="#9966cc"/>
+    </g>
+
+    <!-- Smug smile -->
+    <path d="M-10,25 Q0,35 10,25" fill="none" stroke="#1a1a1f" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Tiny arms - actively typing -->
+    <!-- Left arm reaching to keyboard -->
+    <path d="M-43,13 Q-55,35 -40,55" fill="none" stroke="#9966cc" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="-40" cy="58" r="7" fill="#aa77cc"/>
+
+    <!-- Right arm reaching to keyboard -->
+    <path d="M43,13 Q55,35 40,55" fill="none" stroke="#9966cc" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="40" cy="58" r="7" fill="#aa77cc"/>
+  </g>
+
+  <!-- Keyboard below brain -->
+  <g transform="translate(100, 170)">
+    <!-- Keyboard body -->
+    <rect x="-55" y="-15" width="110" height="25" rx="4" fill="#1a1a1f" stroke="#333" stroke-width="1"/>
+    <!-- Keys row 1 -->
+    <rect x="-50" y="-12" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <rect x="-40" y="-12" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <rect x="-30" y="-12" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <rect x="-20" y="-12" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <rect x="-10" y="-12" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <rect x="0" y="-12" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <rect x="10" y="-12" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <rect x="20" y="-12" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <rect x="30" y="-12" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <rect x="40" y="-12" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <!-- Keys row 2 -->
+    <rect x="-45" y="-4" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <rect x="-35" y="-4" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <rect x="-25" y="-4" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <rect x="-15" y="-4" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <rect x="-5" y="-4" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <rect x="5" y="-4" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <rect x="15" y="-4" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <rect x="25" y="-4" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <rect x="35" y="-4" width="8" height="6" rx="1" fill="#2a2a35"/>
+    <!-- Spacebar -->
+    <rect x="-20" y="4" width="40" height="5" rx="1" fill="#2a2a35"/>
+    <!-- AI label on keyboard -->
+    <text x="42" y="7" font-family="monospace" font-size="6" fill="#ff3366" font-weight="bold">AI</text>
+  </g>
+
+  <!-- Happy vibes - music notes floating -->
+  <g opacity="0.6">
+    <text x="155" y="40" font-family="serif" font-size="14" fill="#00ff88">♪</text>
+    <text x="165" y="55" font-family="serif" font-size="11" fill="#00ff88" opacity="0.7">♫</text>
+    <text x="35" y="35" font-family="serif" font-size="12" fill="#00ff88" opacity="0.8">♪</text>
+  </g>
+
+  <!-- Small code suggestions floating above -->
+  <g transform="translate(100, 20)" opacity="0.5">
+    <rect x="-35" y="-8" width="70" height="16" rx="3" fill="#1a1a1f" stroke="#333" stroke-width="0.5"/>
+    <text x="0" y="3" font-family="monospace" font-size="7" fill="#00ff88" text-anchor="middle">Tab to accept ✓</text>
+  </g>
+</svg>

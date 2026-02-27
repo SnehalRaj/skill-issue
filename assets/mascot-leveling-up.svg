@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <!-- Purple brain gradient -->
+    <linearGradient id="brain-body" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#cc99ff"/>
+      <stop offset="100%" style="stop-color:#9966cc"/>
+    </linearGradient>
+
+    <!-- Glow filter for reconnecting nodes -->
+    <filter id="node-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Reconnecting neurons - solid lines now (not dashed) -->
+  <g filter="url(#node-glow)">
+    <!-- Node 1 - top left, connected -->
+    <circle cx="30" cy="30" r="5" fill="#00ff88" opacity="0.9"/>
+    <line x1="30" y1="30" x2="60" y2="55" stroke="#00ff88" stroke-width="1.5" opacity="0.7"/>
+
+    <!-- Node 2 - top right, connected -->
+    <circle cx="170" cy="25" r="6" fill="#00ff88" opacity="0.85"/>
+    <line x1="170" y1="25" x2="145" y2="50" stroke="#00ff88" stroke-width="1.5" opacity="0.65"/>
+
+    <!-- Node 3 - top center, connected -->
+    <circle cx="100" cy="20" r="4" fill="#00ff88" opacity="0.8"/>
+    <line x1="100" y1="20" x2="100" y2="50" stroke="#00ff88" stroke-width="1.5" opacity="0.6"/>
+
+    <!-- Node 4 - left side -->
+    <circle cx="45" cy="80" r="5" fill="#00ff88" opacity="0.85"/>
+    <line x1="45" y1="80" x2="65" y2="90" stroke="#00ff88" stroke-width="1.5" opacity="0.7"/>
+
+    <!-- Node 5 - right side -->
+    <circle cx="160" cy="75" r="5" fill="#00ff88" opacity="0.8"/>
+    <line x1="160" y1="75" x2="140" y2="88" stroke="#00ff88" stroke-width="1.5" opacity="0.65"/>
+  </g>
+
+  <!-- Brain character body -->
+  <g transform="translate(100, 110)">
+    <!-- Main brain shape -->
+    <ellipse cx="0" cy="0" rx="50" ry="43" fill="url(#brain-body)"/>
+
+    <!-- Brain folds/wrinkles -->
+    <path d="M-33,-20 Q-20,-30 0,-20 Q20,-30 33,-20" fill="none" stroke="#8855aa" stroke-width="2" opacity="0.6"/>
+    <path d="M-27,-7 Q-13,-17 0,-7 Q13,-17 27,-7" fill="none" stroke="#8855aa" stroke-width="1.5" opacity="0.5"/>
+
+    <!-- Smug, confident eyes - half-lidded but sharp -->
+    <g transform="translate(-17, 3)">
+      <!-- Left eye - confident squint -->
+      <ellipse cx="0" cy="0" rx="12" ry="9" fill="#1a1a1f"/>
+      <ellipse cx="0" cy="1" rx="9" ry="7" fill="#2a2a35"/>
+      <!-- Pupil - focused -->
+      <circle cx="1" cy="2" r="5" fill="#0f0f12"/>
+      <!-- Confident reflection -->
+      <circle cx="3" cy="0" r="2" fill="#fff" opacity="0.7"/>
+      <!-- Confident squint eyelid -->
+      <path d="M-12,-4 Q0,-8 12,-4 L12,4 Q0,-2 -12,4 Z" fill="#9966cc"/>
+    </g>
+
+    <g transform="translate(17, 3)">
+      <!-- Right eye - confident squint -->
+      <ellipse cx="0" cy="0" rx="12" ry="9" fill="#1a1a1f"/>
+      <ellipse cx="0" cy="1" rx="9" ry="7" fill="#2a2a35"/>
+      <circle cx="1" cy="2" r="5" fill="#0f0f12"/>
+      <circle cx="3" cy="0" r="2" fill="#fff" opacity="0.7"/>
+      <path d="M-12,-4 Q0,-8 12,-4 L12,4 Q0,-2 -12,4 Z" fill="#9966cc"/>
+    </g>
+
+    <!-- Smug smile -->
+    <path d="M-12,25 Q0,35 12,25" fill="none" stroke="#1a1a1f" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Left arm - flexing! -->
+    <path d="M-43,10 Q-65,-10 -50,-30" fill="none" stroke="#9966cc" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="-50" cy="-33" r="7" fill="#aa77cc"/>
+    <!-- Flexed bicep bump -->
+    <ellipse cx="-55" cy="-15" rx="8" ry="5" fill="#9966cc" transform="rotate(-30 -55 -15)"/>
+
+    <!-- Right arm - normal, confident pose -->
+    <path d="M43,10 Q55,25 60,40" fill="none" stroke="#9966cc" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="60" cy="43" r="7" fill="#aa77cc"/>
+  </g>
+
+  <!-- Battery indicator - 68% now! -->
+  <g transform="translate(165, 155)">
+    <!-- Battery outline -->
+    <rect x="-25" y="-10" width="40" height="20" rx="3" fill="none" stroke="#666" stroke-width="1.5"/>
+    <!-- Battery tip -->
+    <rect x="15" y="-4" width="4" height="8" rx="1" fill="#666"/>
+    <!-- Battery fill - 68% = green, fills most of the battery -->
+    <rect x="-23" y="-8" width="25" height="16" rx="2" fill="#00ff88"/>
+    <!-- Percentage text -->
+    <text x="-5" y="4" font-family="monospace" font-size="9" fill="#1a1a1f" text-anchor="middle" font-weight="bold">68%</text>
+  </g>
+
+  <!-- Level up sparkles -->
+  <g opacity="0.8">
+    <text x="30" y="140" font-family="sans-serif" font-size="10" fill="#ffcc00">✦</text>
+    <text x="175" y="120" font-family="sans-serif" font-size="12" fill="#ffcc00">✦</text>
+    <text x="45" y="165" font-family="sans-serif" font-size="8" fill="#ffcc00">✦</text>
+  </g>
+
+  <!-- Small "LEVEL UP" indicator -->
+  <g transform="translate(35, 180)">
+    <rect x="-25" y="-10" width="50" height="16" rx="3" fill="#00ff88"/>
+    <text x="0" y="2" font-family="monospace" font-size="8" fill="#1a1a1f" text-anchor="middle" font-weight="bold">LEVEL UP</text>
+  </g>
+</svg>

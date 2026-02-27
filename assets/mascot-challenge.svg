@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <!-- Purple brain gradient -->
+    <linearGradient id="brain-body" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#cc99ff"/>
+      <stop offset="100%" style="stop-color:#9966cc"/>
+    </linearGradient>
+
+    <!-- Glow filter for lightning -->
+    <filter id="spark-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Brain character body -->
+  <g transform="translate(100, 110)">
+    <!-- Main brain shape -->
+    <ellipse cx="0" cy="0" rx="50" ry="43" fill="url(#brain-body)"/>
+
+    <!-- Brain folds/wrinkles -->
+    <path d="M-33,-20 Q-20,-30 0,-20 Q20,-30 33,-20" fill="none" stroke="#8855aa" stroke-width="2" opacity="0.6"/>
+    <path d="M-27,-7 Q-13,-17 0,-7 Q13,-17 27,-7" fill="none" stroke="#8855aa" stroke-width="1.5" opacity="0.5"/>
+
+    <!-- Alert, surprised eyes - wide open and focused -->
+    <g transform="translate(-17, 0)">
+      <!-- Left eye - wide, alert -->
+      <ellipse cx="0" cy="0" rx="14" ry="12" fill="#1a1a1f"/>
+      <ellipse cx="0" cy="0" rx="11" ry="10" fill="#2a2a35"/>
+      <!-- Pupil - focused, contracted -->
+      <circle cx="0" cy="0" r="6" fill="#0f0f12"/>
+      <!-- Bright reflection - alert -->
+      <circle cx="2" cy="-2" r="2" fill="#fff" opacity="0.8"/>
+      <circle cx="-1" cy="1" r="1" fill="#fff" opacity="0.5"/>
+    </g>
+
+    <g transform="translate(17, 0)">
+      <!-- Right eye - wide, alert -->
+      <ellipse cx="0" cy="0" rx="14" ry="12" fill="#1a1a1f"/>
+      <ellipse cx="0" cy="0" rx="11" ry="10" fill="#2a2a35"/>
+      <circle cx="0" cy="0" r="6" fill="#0f0f12"/>
+      <circle cx="2" cy="-2" r="2" fill="#fff" opacity="0.8"/>
+      <circle cx="-1" cy="1" r="1" fill="#fff" opacity="0.5"/>
+    </g>
+
+    <!-- Surprised/nervous mouth - small 'o' -->
+    <ellipse cx="0" cy="28" rx="6" ry="5" fill="#1a1a1f"/>
+
+    <!-- Raised eyebrows - surprised -->
+    <path d="M-28,-18 Q-17,-25 -8,-18" fill="none" stroke="#8855aa" stroke-width="2.5" opacity="0.9"/>
+    <path d="M8,-18 Q17,-25 28,-18" fill="none" stroke="#8855aa" stroke-width="2.5" opacity="0.9"/>
+
+    <!-- Arms up - startled gesture -->
+    <path d="M-43,10 Q-65,-5 -55,-25" fill="none" stroke="#9966cc" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="-55" cy="-28" r="7" fill="#aa77cc"/>
+
+    <path d="M43,10 Q65,-5 55,-25" fill="none" stroke="#9966cc" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="55" cy="-28" r="7" fill="#aa77cc"/>
+  </g>
+
+  <!-- Lightning bolt / spark near head - neurons firing -->
+  <g filter="url(#spark-glow)">
+    <path d="M165,60 L155,80 L165,80 L150,105" fill="none" stroke="#ffcc00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Smaller sparks -->
+    <path d="M170,75 L175,85" fill="none" stroke="#ffcc00" stroke-width="2" opacity="0.7"/>
+    <path d="M145,90 L140,100" fill="none" stroke="#ffcc00" stroke-width="2" opacity="0.7"/>
+  </g>
+
+  <!-- Second spark on other side -->
+  <g filter="url(#spark-glow)" opacity="0.6">
+    <path d="M35,70 L45,80 L38,80 L48,95" fill="none" stroke="#ffcc00" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Speech bubble: "wait, I actually know this" -->
+  <g transform="translate(100, 25)">
+    <!-- Bubble pointer -->
+    <polygon points="0,35 -8,28 8,28" fill="#2a2a35"/>
+    <!-- Main bubble -->
+    <rect x="-70" y="-15" width="140" height="45" rx="8" fill="#2a2a35" stroke="#00ff88" stroke-width="1"/>
+    <!-- Text -->
+    <text x="0" y="5" font-family="monospace" font-size="9" fill="#00ff88" text-anchor="middle" font-weight="bold">"wait, I actually</text>
+    <text x="0" y="18" font-family="monospace" font-size="9" fill="#00ff88" text-anchor="middle" font-weight="bold">know this"</text>
+  </g>
+
+  <!-- Sweat drop - nervous but engaged -->
+  <path d="M55,85 Q60,75 58,85 Q56,92 55,85" fill="#66ccff" opacity="0.6"/>
+</svg>

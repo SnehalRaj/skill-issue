@@ -1,8 +1,6 @@
 <div align="center">
 
-<img src="assets/demo/skill-issue-demo.gif" width="600" alt="skill-issue demo" />
-
-<h1>skill-issue</h1>
+<img src="assets/logo.svg" width="600"/>
 
 <p>
   <a href="https://pypi.org/project/skill-issue-cc/"><img src="https://img.shields.io/pypi/v/skill-issue-cc?color=blue&label=pip" alt="PyPI" /></a>
@@ -13,99 +11,62 @@
   <a href="https://github.com/SnehalRaj/skill-issue/actions"><img src="https://img.shields.io/github/actions/workflow/status/SnehalRaj/skill-issue/test.yml?branch=main&label=tests" alt="Tests" /></a>
 </p>
 
-<p><strong>Your AI writes the code. But does your brain keep up?</strong></p>
+**When's the last time you solved a problem without asking first?**
+
+<img src="assets/demo/skill-issue-demo.gif" width="600" alt="skill-issue demo" />
 
 </div>
 
+<img src="assets/mascot-typing.svg" width="80" align="right"/>
+
+The last time you debugged something without asking first was—
+
+You're shipping faster. Or you think you are.
+
 ---
 
-AI coding tools let you ship code you don't understand. Not because you're lazy—there's just no friction. The code looks right, you move on, and slowly you stop reasoning from first principles.
+## The Accumulation
 
-skill-issue tracks what you actually know. When your agent builds something non-trivial, it fires a challenge grounded in what just happened. You answer, it scores you 0-3, and your knowledge graph updates. Next time, it targets concepts you're weak on.
+<img src="assets/mascot-confused.svg" width="80" align="right"/>
+
+METR ran an RCT on experienced open-source developers: AI users took 19% longer. They believed they were 20% faster.<sup>[1]</sup> That's a 39-point perception gap, and it persisted even after subjects saw their own data.
+
+GitHub's research didn't measure whether developers *were* more productive—they asked if developers *felt* more productive.<sup>[5]</sup> The answer was barely. Anthropic measured what you're actually losing: comprehension decays faster than you'd expect, and reviewing AI-generated code gives you "flimsy understanding."<sup>[2]</sup> The tests pass. You don't notice.
+
+It's not one study. The 2024 DORA report found no productivity signal.<sup>[3]</sup> Trust in AI tool output dropped from 43% to 33% in a single year—even developers stopped trusting it.<sup>[4]</sup>
+
+---
+
+## It's Not Just You
+
+On r/ExperiencedDevs, seniors are watching juniors who say "clean coding is not a real thing" and use AI to write PR review responses without reading them.<sup>[8]</sup> Another thread: juniors can't explain why AI-generated code is wrong, even when it "works."<sup>[9]</sup>
+
+It's not just juniors. A senior ML engineer with 9 YoE: "Is senior ML engineering just API calls now?"<sup>[10]</sup> A 40-year veteran documenting his first all-AI project found the ambiguity had shifted somewhere he couldn't follow.<sup>[11]</sup>
+
+Godot maintainers are drowning in "AI slop" contributions. One said: "I don't know how long we can keep it up."<sup>[12]</sup>
+
+---
+
+<img src="assets/mascot-challenge.svg" width="80" align="right"/>
+
+## The Tool
+
+skill-issue embeds micro-challenges directly into your agentic workflow. You ship code with Claude, then get quizzed on what just happened. Not trivia. Not LeetCode. The actual concepts in the code you just approved.
+
+![Knowledge graph showing mastery decay](assets/screenshots/graph-show.svg)
+
+Your knowledge lives in a graph. Nodes are concepts—weighted by how often they appear across real codebases. Edges connect prerequisites. Every challenge updates your mastery scores using spaced repetition: get it right, the node strengthens; get it wrong, it surfaces more often. The system knows what you're weak on before you do.
 
 ---
 
 ## Install
-
-### Claude Code
-
-Two separate commands (don't combine them):
-
-```
-/plugin marketplace add SnehalRaj/skill-issue-marketplace
-```
-
-```
-/plugin install skill-issue@skill-issue-marketplace
-```
-
-Open a new session.
-
-### pip (Cursor, Codex, any agent)
 
 ```bash
 pip install skill-issue-cc
 skill-issue init
 ```
 
-Paste the output of `skill-issue init --print` into your editor's system prompt.
-
----
-
-## Knowledge Graph
-
-```
-skill-issue graph show --domain machine-learning
-
-Knowledge Graph: machine-learning
-============================================================
-
-[GOOD]     gradient-descent       [####..........................] 0.42  (2)
-[WEAK]     bias-variance-tradeoff [##............................] 0.09  (1)
-[GOOD]     backpropagation        [#############.................] 0.45  (2)
-[WEAK]     regularization         [..............................] 0.00
-[WEAK]     cross-validation       [..............................] 0.00
-[WEAK]     loss-functions         [######........................] 0.21  (1)
-[WEAK]     attention-mechanism    [..............................] 0.00
-
-Priority Queue (work on these next):
-  >> regularization      (priority: 0.95 = weight:0.95 x gap:1.00)
-  >> cross-validation    (priority: 0.95 = weight:0.95 x gap:1.00)
-  >> attention-mechanism (priority: 0.95 = weight:0.95 x gap:1.00)
-
-Total nodes: 12 | Avg mastery: 0.10 | 0 mastered | 10 weak
-```
-
-Each domain has a curated graph of concepts weighted by how often they come up in real work.
-
-- **reuse_weight** (0–1): How fundamental. 0.95 means it's everywhere.
-- **mastery** (0–1): Your proven understanding. Updates via EMA after each challenge.
-- **priority** = `weight × (1 - mastery)`. High-weight stuff you haven't proven = top priority.
-
-Mastery fades if you don't practice (3-day grace, then 0.02/day). Use it or lose it.
-
----
-
-## Onboarding
-
-```
-skill-issue init
-
-3 questions to personalise your knowledge graph.
-
-1. What do you mainly build or work on?
-   > I train ML models and do some backend API work
-
-2. What languages or tools do you use most?
-   > Python, PyTorch, FastAPI, PostgreSQL
-
-3. One concept you know you are shaky on? (optional)
-   > always forget when cross-validation goes wrong
-
-Knowledge graphs initialised for: machine-learning, backend-systems, algorithms
-```
-
-Three questions, plain English. It figures out which domains to load.
+That's it.
 
 ---
 
@@ -120,7 +81,7 @@ Three questions, plain English. It figures out which domains to load.
 | ⏱️ | **Complexity** | What's the Big-O? Can it be better? |
 | 🔗 | **Connect** | How does this relate to X? |
 
-Challenges are grounded in what was just built. No random trivia.
+Grounded in what was just built. No random trivia.
 
 ---
 
@@ -169,6 +130,8 @@ Add your own in `references/knowledge_graphs/`.
 
 ---
 
+<img src="assets/mascot-leveling-up.svg" width="80" align="right"/>
+
 ## Progression
 
 ```
@@ -188,9 +151,19 @@ Streak bonus tops out at 2.5× for consecutive correct answers.
 
 ---
 
-## Persistent State
+## Knowledge Graph
 
-Everything's in `~/.skill-issue/`. Plain JSON/YAML, no database.
+Each domain has a curated graph of concepts weighted by how often they come up in real work.
+
+- **reuse_weight** (0–1): How fundamental. 0.95 means it's everywhere.
+- **mastery** (0–1): Your proven understanding. Updates via EMA after each challenge.
+- **priority** = `weight × (1 - mastery)`. High-weight stuff you haven't proven = top priority.
+
+Mastery fades if you don't practice (3-day grace, then 0.02/day). Use it or lose it.
+
+---
+
+## Persistent State
 
 ```
 ~/.skill-issue/
@@ -202,28 +175,60 @@ Everything's in `~/.skill-issue/`. Plain JSON/YAML, no database.
     └── 2026-02-27.json
 ```
 
-Version-controllable. Portable. Human-readable.
+Plain JSON/YAML. Version-controllable. No database.
+
+---
+
+## Further Reading
+
+1. [METR, "AI Experienced OS Devs Study" (2025)](https://metr.org/Early_2025_AI_Experienced_OS_Devs_Study.pdf) — RCT: experienced developers 19% slower with AI, believed they were 20% faster.
+
+2. [Anthropic, "The Impact of AI on Developer Productivity" (2026)](https://arxiv.org/abs/2601.20245) — No significant speed-up; AI coding "significantly lowers comprehension of the codebase."
+
+3. DORA Report 2024 — AI tools showed no measurable productivity signal.
+
+4. [LeadDev, "Trust in AI Coding Tools Is Plummeting" (2025)](https://leaddev.com/technical-direction/trust-in-ai-coding-tools-is-plummeting) — 33% trust in 2025, down from 43% in 2024.
+
+5. [LeadDev, "AI Coding Assistants Aren't Really Making Devs Feel More Productive" (2025)](https://leaddev.com/velocity/ai-coding-assistants-arent-really-making-devs-feel-more-productive) — GitHub's research measured feelings, not output—and still found minimal gains.
+
+6. [Claude on Upwork Benchmark (2025)](https://reddit.com/r/MachineLearning) — Resolved 26.2% of real-world software engineering tasks.
+
+7. ["Competence as Tragedy"](https://crowprose.com/blog/competence-as-tragedy) — Personal essay on watching AI make hard-won skills obsolete.
+
+8. [r/ExperiencedDevs, "Junior devs not interested in software engineering" (2025)](https://reddit.com/r/ExperiencedDevs/comments/1mrfgm2) — 1,795 upvotes. Seniors observing juniors who've never heard of Coursera, say "clean coding is not a real thing."
+
+9. [r/ExperiencedDevs, "ChatGPT is producing bad and lazy junior engineers" (2025)](https://reddit.com/r/ExperiencedDevs/comments/1lb5ktb) — 1,449 upvotes. Juniors can't explain why AI code is wrong.
+
+10. [r/MachineLearning, "Is senior ML engineering just API calls now?" (2025)](https://reddit.com/r/MachineLearning/comments/1npdfh1) — 9 YoE engineer feeling career stagnation.
+
+11. ["Vibe Coding as a Coding Veteran"](https://medium.com/gitconnected/vibe-coding-as-a-coding-veteran-cd370fe2be50) — 40-year veteran, PhD in AI, documenting 2 weeks building entirely through AI conversation.
+
+12. [PCGamer, "Godot drowning in 'AI slop' contributions" (2025)](https://pcgamer.com) — Maintainer: "I don't know how long we can keep it up." 2,963 upvotes on r/programming.
+
+13. Ilya Sutskever on the gap between AI benchmarks and economic impact (2025) — Even AI's believers can't explain why gains aren't translating.
 
 ---
 
 ## Philosophy
 
-The name's a joke. Claude has skills (literally, `.skill` files). What about yours?
+This is not a productivity tool. Your productivity is fine. It's your brain we're worried about.
 
-Understanding compounds. A developer who actually gets the code they ship is more effective long-term. One well-timed challenge beats a passive tutorial. Your trophy wall tracks your growth—no leaderboard against others.
+You hired a brilliant assistant who never explains anything. Now you're the person who can't do their job without them. The name is the bit. Claude has skills. The question is whether you still do.
+
+Ilya Sutskever—one of AI's true believers—said he's puzzled why benchmark gains aren't translating to economic impact.<sup>[13]</sup> A personal essay called it "competence as tragedy": watching your hard-won skills become vestigial.<sup>[7]</sup>
+
+The tools work. That's the problem. They work well enough that you stop working *at all*.
 
 ---
 
 ## Contributing
 
-Knowledge graphs are JSON in `references/knowledge_graphs/`. Scripts are plain Python, zero dependencies.
+Knowledge graphs are JSON in `references/knowledge_graphs/`. PRs welcome.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) or open an issue.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 **MIT License**
 
 ---
 
-<div align="center">
-  <sub>Works with Claude Code · Cursor · Codex · OpenCode · any agent that reads a system prompt</sub>
-</div>
+<div align="center"><sub>Works with Claude Code · Cursor · Codex · any agent that reads a system prompt</sub></div>
