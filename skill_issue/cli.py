@@ -127,6 +127,111 @@ def cmd_export(args):
         export_json(args.output)
 
 
+# --- Knowledge Graph Commands ---
+
+def cmd_graph_show(args):
+    """Show ASCII visualization of knowledge graph."""
+    from skill_issue.graph_viz import ascii_graph
+    from skill_issue.knowledge_state import list_domains
+    domain = args.domain
+    if domain not in list_domains():
+        print(f"Domain '{domain}' not found. Available: {', '.join(list_domains())}")
+        sys.exit(1)
+    print(ascii_graph(domain))
+
+
+def cmd_graph_weak(args):
+    """Show top priority (weak + high reuse_weight) nodes."""
+    from skill_issue.knowledge_state import list_domains
+    domain = args.domain
+    if domain not in list_domains():
+        print(f"Domain '{domain}' not found. Available: {', '.join(list_domains())}")
+        sys.exit(1)
+
+    if args.json:
+        from skill_issue.graph_viz import weak_nodes_json
+        print(json.dumps(weak_nodes_json(domain, top_n=args.top), indent=2))
+    else:
+        from skill_issue.graph_viz import ascii_weak_list
+        print(ascii_weak_list(domain, top_n=args.top))
+
+
+def cmd_graph_update(args):
+    """Update mastery for a specific node."""
+    from skill_issue.knowledge_state import update_node, list_domains
+    domain = args.domain
+    if domain not in list_domains():
+        print(f"Domain '{domain}' not found. Available: {', '.join(list_domains())}")
+        sys.exit(1)
+
+    result = update_node(domain, args.node, args.score)
+    print(f"Updated {args.node}:")
+    print(f"  Mastery: {result['mastery']:.2f}")
+    print(f"  Status:  {result['status']}")
+    print(f"  Attempts: {result['attempts']}")
+
+
+def cmd_graph_init(args):
+    """Initialize user state for a domain."""
+    from skill_issue.knowledge_state import init_domain, load_graph, list_domains
+    domain = args.domain
+    if domain not in list_domains():
+        print(f"Domain '{domain}' not found. Available: {', '.join(list_domains())}")
+        sys.exit(1)
+
+    init_domain(domain)
+    graph = load_graph(domain)
+    print(f"Initialized knowledge state for '{domain}'")
+    print(f"  Nodes: {len(graph['nodes'])}")
+    print(f"  State saved to: ~/.skill-issue/knowledge_state.json")
+
+
+def cmd_graph_web(args):
+    """Generate D3 web visualization and open in browser."""
+    from skill_issue.knowledge_state import list_domains, get_all_nodes, load_graph
+    from skill_issue.web_viz import generate_html
+    import tempfile
+    import webbrowser
+
+    domain = args.domain
+    if domain not in list_domains():
+        print(f"Domain '{domain}' not found. Available: {', '.join(list_domains())}")
+        sys.exit(1)
+
+    html = generate_html(domain)
+
+    # Write to temp file and open
+    output_path = args.output
+    if not output_path:
+        fd, output_path = tempfile.mkstemp(suffix=".html", prefix=f"skill-issue-{domain}-")
+        os.close(fd)
+
+    with open(output_path, "w") as f:
+        f.write(html)
+
+    print(f"Generated: {output_path}")
+    if not args.no_open:
+        webbrowser.open(f"file://{output_path}")
+
+
+def cmd_graph_decay(args):
+    """Apply decay to all nodes (for testing)."""
+    from skill_issue.knowledge_state import apply_decay
+    state = apply_decay()
+    domains_updated = len(state.get("domains", {}))
+    print(f"Applied decay to {domains_updated} domain(s)")
+
+
+def cmd_graph_domains(args):
+    """List available knowledge graph domains."""
+    from skill_issue.knowledge_state import list_domains, load_graph
+    domains = list_domains()
+    print("Available domains:")
+    for d in domains:
+        graph = load_graph(d)
+        print(f"  {d}: {len(graph['nodes'])} nodes")
+
+
 def main():
     parser = argparse.ArgumentParser(
         prog="skill-issue",
@@ -169,6 +274,49 @@ def main():
     p_export.add_argument("--output", help="Output file path")
     p_export.set_defaults(func=cmd_export)
 
+    # graph (with subcommands)
+    p_graph = sub.add_parser("graph", help="Knowledge graph commands")
+    graph_sub = p_graph.add_subparsers(dest="graph_command", metavar="<subcommand>")
+
+    # graph show
+    p_graph_show = graph_sub.add_parser("show", help="Show ASCII visualization")
+    p_graph_show.add_argument("--domain", default="quantum-ml", help="Domain (default: quantum-ml)")
+    p_graph_show.set_defaults(func=cmd_graph_show)
+
+    # graph weak
+    p_graph_weak = graph_sub.add_parser("weak", help="Show top priority nodes")
+    p_graph_weak.add_argument("--domain", default="quantum-ml", help="Domain (default: quantum-ml)")
+    p_graph_weak.add_argument("--top", type=int, default=5, help="Number of nodes (default: 5)")
+    p_graph_weak.add_argument("--json", action="store_true", help="Output as JSON")
+    p_graph_weak.set_defaults(func=cmd_graph_weak)
+
+    # graph update
+    p_graph_update = graph_sub.add_parser("update", help="Update node mastery")
+    p_graph_update.add_argument("--node", required=True, help="Node ID")
+    p_graph_update.add_argument("--score", type=int, required=True, choices=[0, 1, 2, 3])
+    p_graph_update.add_argument("--domain", required=True, help="Domain")
+    p_graph_update.set_defaults(func=cmd_graph_update)
+
+    # graph init
+    p_graph_init = graph_sub.add_parser("init", help="Initialize domain state")
+    p_graph_init.add_argument("--domain", required=True, help="Domain to initialize")
+    p_graph_init.set_defaults(func=cmd_graph_init)
+
+    # graph web
+    p_graph_web = graph_sub.add_parser("web", help="Generate D3 web visualization")
+    p_graph_web.add_argument("--domain", default="quantum-ml", help="Domain (default: quantum-ml)")
+    p_graph_web.add_argument("--output", help="Output HTML file path")
+    p_graph_web.add_argument("--no-open", action="store_true", help="Don't open in browser")
+    p_graph_web.set_defaults(func=cmd_graph_web)
+
+    # graph decay
+    p_graph_decay = graph_sub.add_parser("decay", help="Apply decay (testing)")
+    p_graph_decay.set_defaults(func=cmd_graph_decay)
+
+    # graph domains
+    p_graph_domains = graph_sub.add_parser("domains", help="List available domains")
+    p_graph_domains.set_defaults(func=cmd_graph_domains)
+
     args = parser.parse_args()
 
     if not args.command:
@@ -179,6 +327,10 @@ def main():
         else:
             print("Welcome to skill-issue 🧠")
             print("Get started: skill-issue init")
+        return
+
+    if args.command == "graph" and not getattr(args, "graph_command", None):
+        p_graph.print_help()
         return
 
     if hasattr(args, "func"):
