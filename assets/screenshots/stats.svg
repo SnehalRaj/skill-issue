@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 260" width="500" height="260">
+  <defs>
+    <linearGradient id="header-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3d3d3d"/>
+      <stop offset="100%" style="stop-color:#2d2d2d"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Window background -->
+  <rect width="500" height="260" rx="8" fill="#1a1b26"/>
+
+  <!-- Window header -->
+  <rect width="500" height="40" rx="8" fill="url(#header-grad)"/>
+  <rect y="32" width="500" height="8" fill="url(#header-grad)"/>
+
+  <!-- Traffic lights -->
+  <circle cx="20" cy="20" r="6" fill="#ff5f57"/>
+  <circle cx="40" cy="20" r="6" fill="#febc2e"/>
+  <circle cx="60" cy="20" r="6" fill="#28c840"/>
+
+  <!-- Title -->
+  <text x="250" y="25" text-anchor="middle" fill="#808080" font-family="SF Mono, Monaco, monospace" font-size="13">skill-issue stats</text>
+
+  <!-- Terminal content -->
+  <g font-family="SF Mono, Monaco, Consolas, monospace" font-size="13">
+    <text x="20" y="75" fill="#c9d1d9"><tspan fill="#a855f7">🧠 skill-issue — demo</tspan></text>
+    <text x="20" y="95" fill="#c9d1d9">Level:    5 (847 XP)</text>
+    <text x="20" y="115" fill="#c9d1d9">Streak:   🔥 4 (best: 7)</text>
+    <text x="20" y="135" fill="#c9d1d9">Accuracy: 74%  (31/42 correct)</text>
+    <text x="20" y="155" fill="#c9d1d9"></text>
+    <text x="20" y="175" fill="#c9d1d9">Topics:</text>
+    <text x="20" y="195" fill="#c9d1d9">  machine-learning: 3 (18 attempts)</text>
+    <text x="20" y="215" fill="#c9d1d9">  algorithms: 2 (12 attempts)</text>
+    <text x="20" y="235" fill="#c9d1d9">  backend-systems: 2 (12 attempts)</text>
+  </g>
+</svg>

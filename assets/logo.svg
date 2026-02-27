@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="brain-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="bar-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#22c55e"/>
+      <stop offset="60%" style="stop-color:#22c55e"/>
+      <stop offset="60%" style="stop-color:#374151"/>
+      <stop offset="100%" style="stop-color:#374151"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="#0f172a"/>
+  <circle cx="100" cy="100" r="90" fill="none" stroke="url(#brain-gradient)" stroke-width="3"/>
+
+  <!-- Stylized brain outline -->
+  <g transform="translate(100, 85)" fill="none" stroke="url(#brain-gradient)" stroke-width="4" stroke-linecap="round">
+    <!-- Left hemisphere -->
+    <path d="M-8,-30 C-35,-30 -50,-10 -50,15 C-50,35 -35,50 -15,50 C-5,50 -8,40 -8,30"/>
+    <path d="M-30,-20 C-40,-10 -40,10 -30,20"/>
+    <path d="M-20,-25 C-25,-15 -25,5 -20,15"/>
+
+    <!-- Right hemisphere -->
+    <path d="M8,-30 C35,-30 50,-10 50,15 C50,35 35,50 15,50 C5,50 8,40 8,30"/>
+    <path d="M30,-20 C40,-10 40,10 30,20"/>
+    <path d="M20,-25 C25,-15 25,5 20,15"/>
+
+    <!-- Center connection -->
+    <path d="M-8,-30 L8,-30"/>
+    <path d="M-8,30 C-8,45 8,45 8,30"/>
+  </g>
+
+  <!-- Progress bar at bottom -->
+  <rect x="35" y="150" width="130" height="14" rx="7" fill="#1e293b"/>
+  <rect x="37" y="152" width="76" height="10" rx="5" fill="url(#bar-gradient)"/>
+
+  <!-- Small node indicators -->
+  <circle cx="50" cy="157" r="3" fill="#22c55e"/>
+  <circle cx="75" cy="157" r="3" fill="#22c55e"/>
+  <circle cx="100" cy="157" r="3" fill="#374151"/>
+  <circle cx="125" cy="157" r="3" fill="#374151"/>
+  <circle cx="150" cy="157" r="3" fill="#374151"/>
+</svg>

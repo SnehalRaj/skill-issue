@@ -1,8 +1,10 @@
 <div align="center">
 
-<img src="assets/demo/skill-issue-demo.gif" width="600" alt="skill-issue demo" />
+<img src="assets/logo.svg" width="120" alt="skill-issue logo" />
 
 <h1>skill-issue</h1>
+
+<img src="assets/demo/skill-issue-demo.gif" width="600" alt="skill-issue demo" />
 
 <p>
   <a href="https://pypi.org/project/skill-issue-cc/"><img src="https://img.shields.io/pypi/v/skill-issue-cc?color=blue&label=pip" alt="PyPI" /></a>
@@ -10,6 +12,7 @@
   <a href="https://github.com/SnehalRaj/skill-issue/stargazers"><img src="https://img.shields.io/github/stars/SnehalRaj/skill-issue?style=flat" alt="Stars" /></a>
   <img src="https://img.shields.io/badge/works%20with-Claude%20Code-orange" alt="Claude Code" />
   <img src="https://img.shields.io/badge/works%20with-Cursor-purple" alt="Cursor" />
+  <a href="https://github.com/SnehalRaj/skill-issue/actions"><img src="https://img.shields.io/github/actions/workflow/status/SnehalRaj/skill-issue/test.yml?branch=main&label=tests" alt="Tests" /></a>
 </p>
 
 <p><strong>Your AI writes the code. But does your brain keep up?</strong></p>
@@ -18,65 +21,9 @@
 
 ---
 
-## The problem nobody's talking about
+AI coding tools let you ship code you don't understand. The code looks right, you move on, and slowly you stop reasoning from first principles.
 
-There's a study you should know about.
-
-METR ran a randomized controlled trial in early 2025 — experienced open-source developers, working on their own codebases, real issues. With AI tools, they took **19% longer** to complete tasks than without. But here's the unsettling part: those same developers *believed* AI had made them 20% faster. Even after experiencing the slowdown firsthand, the belief held.
-
-Anthropic's own research found something similar: AI-assisted coding significantly lowers codebase comprehension. Developers who rely more on AI perform worse at debugging, conceptual understanding, and code reading. "Just reviewing the generated code" gives you, at best, a flimsy grasp of what you're shipping.
-
-Trust in AI coding tools is [already falling](https://leaddev.com/technical-direction/trust-in-ai-coding-tools-is-plummeting) — 33% of developers trusted AI output accuracy in 2025, down from 43% the year before.
-
-This isn't an argument against AI tools. It's a description of a gap that's opening up quietly, without anyone noticing.
-
----
-
-## The gym analogy
-
-Everyone goes to the gym. Not because physical labor disappeared — it mostly has — but because staying physically capable requires deliberate effort. You have to maintain it. The infrastructure for that is everywhere: gyms, workout plans, progress tracking, coaches.
-
-Coding used to be that workout for your brain. Every bug you debugged, every algorithm you reasoned through, every system you designed from scratch was building something. Judgment. Pattern recognition. The ability to hold complexity in your head and work through it.
-
-AI agents are changing that. Not by making you worse — but by removing the friction that was doing the work. The code appears. It looks right. You move on. And slowly, without noticing, you stop reasoning from first principles.
-
-There's no gym for this yet.
-
----
-
-## What skill-issue does
-
-When your agent builds something non-trivial, it fires a challenge grounded in what just happened. Not trivia. Not a random LeetCode problem. Something directly tied to the code you just shipped.
-
-You answer it. It scores you 0–3. Your knowledge graph updates.
-
-Over time, it shows you exactly where your understanding is solid and where it's quietly fading. The mastery score decays if you don't practice — because real understanding works the same way.
-
-```
-skill-issue graph show --domain machine-learning
-
-Knowledge Graph: machine-learning
-============================================================
-
-[GOOD]     gradient-descent       [####..........................] 0.42  (2)
-[WEAK]     bias-variance-tradeoff [##............................] 0.09  (1)
-[GOOD]     backpropagation        [#############.................] 0.45  (2)
-[WEAK]     regularization         [..............................] 0.00
-[WEAK]     cross-validation       [..............................] 0.00
-[WEAK]     loss-functions         [######........................] 0.21  (1)
-[WEAK]     attention-mechanism    [..............................] 0.00
-
-Priority Queue (work on these next):
-  >> regularization      (priority: 0.95 = weight:0.95 x gap:1.00)
-  >> cross-validation    (priority: 0.95 = weight:0.95 x gap:1.00)
-  >> attention-mechanism (priority: 0.95 = weight:0.95 x gap:1.00)
-
-Total nodes: 12 | Avg mastery: 0.10 | 0 mastered | 10 weak
-```
-
-Each domain has a curated graph of concepts weighted by how often they come up in real work. High-weight concepts you haven't proven → top priority.
-
-Mastery fades over time (3-day grace, then 0.02/day). Use it or lose it.
+skill-issue tracks what you actually know. When your agent builds something non-trivial, it fires a challenge grounded in what just happened. You answer, it scores you 0-3, your knowledge graph updates. Next time, it targets the gaps.
 
 ---
 
@@ -107,6 +54,20 @@ Paste the output of `skill-issue init --print` into your editor's system prompt.
 
 ---
 
+## Knowledge Graph
+
+<img src="assets/screenshots/graph-show.svg" width="700" alt="Knowledge graph visualization" />
+
+Each domain has a curated graph of concepts weighted by how often they come up in real work.
+
+- **reuse_weight** (0–1): How fundamental. 0.95 means it's everywhere.
+- **mastery** (0–1): Your proven understanding. Updates via EMA after each challenge.
+- **priority** = `weight × (1 - mastery)`. High-weight stuff you haven't proven = top priority.
+
+Mastery fades if you don't practice (3-day grace, then 0.02/day). Use it or lose it.
+
+---
+
 ## Onboarding
 
 ```
@@ -126,7 +87,7 @@ skill-issue init
 Knowledge graphs initialised for: machine-learning, backend-systems, algorithms
 ```
 
-Three questions, plain English. It figures out which domains to load.
+Three questions. It figures out which domains to load.
 
 ---
 
@@ -141,7 +102,7 @@ Three questions, plain English. It figures out which domains to load.
 | ⏱️ | **Complexity** | What's the Big-O? Can it be better? |
 | 🔗 | **Connect** | How does this relate to X? |
 
-Challenges are grounded in what was just built. Not random trivia.
+Grounded in what was just built. No random trivia.
 
 ---
 
@@ -211,8 +172,6 @@ Streak bonus tops out at 2.5× for consecutive correct answers.
 
 ## Persistent State
 
-Everything's in `~/.skill-issue/`. Plain JSON/YAML, no database.
-
 ```
 ~/.skill-issue/
 ├── profile.json           # XP, streak, topic levels, milestones
@@ -223,7 +182,7 @@ Everything's in `~/.skill-issue/`. Plain JSON/YAML, no database.
     └── 2026-02-27.json
 ```
 
-Version-controllable. Portable. Human-readable.
+Plain JSON/YAML. Version-controllable. No database.
 
 ---
 
@@ -231,17 +190,15 @@ Version-controllable. Portable. Human-readable.
 
 The name's a joke. Claude has skills (literally, `.skill` files). What about yours?
 
-The METR study found that developers *felt* faster with AI even when they were measurably slower. That perception gap is the real problem — you can't fix what you can't see. skill-issue makes the invisible visible: where your understanding is solid, where it's drifting, and what to work on next.
-
-A developer who actually understands the code they ship is more effective, more resilient, and harder to replace. One well-timed challenge beats an hour of passive tutorials. Your trophy wall tracks real growth — no leaderboard against others, just you versus yesterday's you.
+Understanding compounds. One well-timed challenge beats an hour of passive tutorials. Your trophy wall tracks growth against yesterday's you—no leaderboard.
 
 ---
 
 ## Contributing
 
-Knowledge graphs are JSON in `references/knowledge_graphs/`. Scripts are plain Python, zero dependencies.
+Knowledge graphs are JSON in `references/knowledge_graphs/`. PRs welcome.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) or open an issue.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 **MIT License**
 
