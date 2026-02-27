@@ -17,7 +17,7 @@
 
 </div>
 
-<img src="assets/mascot-typing.svg" width="80" align="right"/>
+<img src="assets/mascot-typing.svg" width="80" align="left" style="margin-right: 16px;"/>
 
 The last time you debugged something without asking first was—
 
@@ -47,7 +47,7 @@ Godot maintainers are drowning in "AI slop" contributions. One said: "I don't kn
 
 ---
 
-<img src="assets/mascot-challenge.svg" width="80" align="right"/>
+<img src="assets/mascot-challenge.svg" width="80" align="left" style="margin-right: 16px;"/>
 
 ## The Tool
 
