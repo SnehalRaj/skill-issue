@@ -99,22 +99,30 @@ Knowledge graphs initialised for: machine-learning, backend-systems, algorithms
 
 ## Install
 
-**Claude Code (native plugin):**
-```bash
+### Claude Code (native plugin)
+
+Run these as **two separate commands** in Claude Code — not on one line:
+
+```
 /plugin marketplace add SnehalRaj/skill-issue-marketplace
+```
+
+Then:
+
+```
 /plugin install skill-issue@skill-issue-marketplace
 ```
 
-**Cursor:**
-```bash
-/plugin-add skill-issue
-```
+Open a new session. skill-issue activates automatically.
 
-**pip (works everywhere):**
+### pip (works with Cursor, Codex, any agent)
+
 ```bash
 pip install skill-issue-cc
 skill-issue init
 ```
+
+Then paste the output of `skill-issue init --print` into your editor's system prompt or rules file.
 
 ---
 
