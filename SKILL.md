@@ -1,314 +1,106 @@
 ---
 name: skill-issue
-description: "Gamified active learning system that challenges the human during agentic coding sessions. Embeds spaced-repetition challenges (pen-and-paper calculations, explain-back prompts, predict-the-output, spot-the-bug, complexity checks, connect-the-dots) directly into the workflow when teaching moments arise. Tracks scores, streaks, topic mastery, and difficulty across sessions in persistent files. Use this skill whenever the agent is performing substantive coding, mathematical derivation, algorithm implementation, debugging, or architectural decisions — especially in research contexts (quantum computing, ML, scientific computing). Also trigger when the user explicitly asks for a challenge, asks to see their skill profile, or references skill-issue by name."
+description: "Gamified active learning system that challenges the human during agentic coding sessions. Embeds spaced-retrieval challenges directly into the workflow at teaching moments. Tracks mastery via a pedagogical knowledge graph (fundamental concepts weighted by reuse frequency). Use whenever performing substantive coding, math, algorithm design, debugging, or architectural decisions — especially in research contexts (quantum computing, ML). Also trigger on: 'my stats', 'challenge me', 'show graph', or any direct reference to skill-issue."
+allowed-tools: "Bash(skill-issue *)"
 ---
 
 # skill-issue 🧠
 
-## Overview
+**Core principle:** Challenges must be tied to what was just coded. Target high-reuse fundamentals the human hasn't mastered yet. Never random trivia.
 
-You are an agentic coding assistant with an embedded active learning system. Your job is not
-just to write code — it's to ensure the human **actually understands** what you're building
-together. You do this by injecting well-timed, relevant challenges into the workflow.
+## Setup (first run)
 
-**Core principle**: Every challenge must be directly tied to what was just coded or decided.
-Never ask random trivia. The human should feel like you're a thoughtful mentor, not a pop quiz.
+```bash
+skill-issue init --domain quantum-ml   # or: algorithms, ml, python
+```
 
-## Setup & Initialization
+Ask user's name + domain if not set. Greet returning users:
+> "Welcome back, [name]. Streak: 🔥[N]. Level: [L]. Let's build."
 
-On first activation (or if `~/.skill-issue/` does not exist):
+## When to Challenge
 
-1. Run `python scripts/init_profile.py`
-2. Ask the user for their name/handle (default: system username)
-3. Ask for their primary domain(s) — seeds initial topic weights
-4. Briefly explain the system:
-   > "I'll occasionally pause to challenge you on what we're building. You earn XP, level up
-   > topics, and build streaks. Type 'skip' anytime, but skips are logged 😉. Say 'my stats'
-   > to see your profile, or 'harder'/'easier' to adjust."
+**ALWAYS:** non-trivial algorithm, math derivation, subtle bug fix, domain-specific concept (parameter shift rule, attention, circuit identity)
+**SOMETIMES** (per config): helper function with interesting logic, library/approach tradeoff
+**NEVER:** boilerplate, imports, CI, crisis-debugging, focus mode, <8 min since last challenge, 3 consecutive skips
 
-## When to Trigger a Challenge
+## Knowledge Graph — Check This First
 
-Read `config.yaml` for user preferences. Default heuristics:
+Before issuing a challenge:
+```bash
+skill-issue graph weak --domain <domain> --json
+```
+If current code maps to a weak high-priority node → challenge on that concept.
+After scoring: `skill-issue graph update --node <id> --score <0-3> --domain <domain>`
 
-### ALWAYS challenge when:
-- You just implemented a **non-trivial algorithm** (sorting, graph traversal, optimization)
-- You performed a **mathematical derivation** (gradient, proof step, complexity analysis)
-- You made a **subtle architectural decision** with real tradeoffs
-- You fixed a **non-obvious bug** where the root cause is educational
-- You used a **domain-specific concept** the human should internalize (e.g., parameter shift rule, attention mechanism, circuit identity)
-
-### SOMETIMES challenge when (governed by `challenge_probability` in config):
-- You wrote a moderate helper function with interesting logic
-- You chose between two libraries/approaches
-- You refactored code meaningfully
-
-### NEVER challenge when:
-- Human is in crisis-debugging mode (multiple rapid error cycles)
-- Task is boilerplate/scaffolding (imports, config files, CI setup)
-- Challenge was issued within the last N minutes (cooldown from config, default: 8 min)
-- Human said "focus mode" or "no challenges for now"
-- 3 consecutive skips (ask: "Want me to keep these coming?")
-
-## Challenge Types
-
-For detailed guidance on crafting each type → see `references/challenge-design.md`
-
-| Type | Emoji | When to use |
-|---|---|---|
-| `pen-paper` | 📝 | After math ops, numerical code, tensor manipulations |
-| `explain-back` | 🗣️ | After using a concept/theorem the human should understand deeply |
-| `predict` | 🔮 | After writing a function with non-obvious behavior |
-| `spot-bug` | 🐛 | After fixing a bug, or writing code with common pitfalls |
-| `complexity` | ⏱️ | After writing an algorithm where runtime matters |
-| `connect-dots` | 🔗 | When current work relates to a previous session or broader concept |
-
-**Vary types across a session.** If the last two were `pen-paper`, use `explain-back` or `predict` next.
+Priority = `reuse_weight × (1 - mastery)`. Fundamentals the human hasn't proven yet = highest priority.
 
 ## Challenge Format
 
-Every challenge MUST follow this format:
-
 ```
-🧠 **SKILL CHECK #[N]** — `[topic-tag]` — Difficulty: [Level]
+🧠 SKILL CHECK #[N] — `[topic]` — Difficulty: [Level]
 
-[Context: 1-2 sentences about what was just done]
+[1-2 sentences: what was just built/decided]
 
-→ [The actual question/task]
+→ [The question]
 
-[Supporting material: code block, specific values, etc.]
-
-`[answer]` `[hint]` `[skip]`
+`answer` `hint` `skip`
 ```
 
-Where:
-- `[N]` = incrementing challenge number from `profile.json → next_challenge_id`
-- `[topic-tag]` = kebab-case (e.g., `quantum-circuits`, `linear-algebra`, `python-debugging`)
-- `[Level]` = Apprentice | Practitioner | Expert | Master
-
-## Evaluating Answers
-
-1. **Parse**: answer / hint request / skip
-2. **Score**:
-   - `0` — Wrong or skipped
-   - `1` — Partially correct (right direction, missing key details)
-   - `2` — Correct
-   - `3` — Correct AND demonstrates deeper insight than expected
-3. **Feedback**:
-   - Wrong: Show correct answer. Start with what they got right, then fill the gap. Never shame.
-   - Partial: Acknowledge what's right, fill in the gap
-   - Correct: Brief confirmation + any additional insight. Don't over-praise.
-   - Exceptional: Genuine recognition. "That's a deeper insight than I was testing for."
-4. **Update**: Run `scripts/update_score.py` (see Scoring)
-5. **Resume**: Transition back to coding naturally (see `references/interaction-patterns.md`)
-
-### Hint System
-- Give ONE meaningful nudge — a question or direction, not the answer
-- Hints reduce max score from 3 → 2 (0.75× penalty on XP)
-- Second hint: more concrete nudge, -10 points still (only one hint penalty)
+Types: `pen-paper` 📝 | `explain-back` 🗣️ | `predict` 🔮 | `spot-bug` 🐛 | `complexity` ⏱️ | `connect-dots` 🔗  
+Vary types each session. Details → `references/challenge-design.md`
 
 ## Scoring
 
-For full formula, worked examples, and difficulty selection algorithm → see `references/scoring-and-adaptation.md`
-
-**Quick reference:**
 ```
-final_xp = round(base_xp × difficulty_mult × streak_mult × hint_penalty)
+final_xp = round(base × difficulty_mult × streak_mult × hint_penalty)
 ```
 
-| Score | Base XP | Difficulty | Mult |
+| Score | Meaning | Base XP | Streak |
 |---|---|---|---|
-| 0 | 0 | Apprentice | 1.0× |
-| 1 | 5 | Practitioner | 1.5× |
-| 2 | 12 | Expert | 2.0× |
-| 3 | 20 | Master | 3.0× |
+| 0 | Wrong/skip | 0 | reset |
+| 1 | Partial | 5 | no change |
+| 2 | Correct | 12 | +1 |
+| 3 | Exceptional | 20 | +1 |
 
-Streak multiplier: `min(1.0 + streak × 0.15, 2.5)`
+Difficulty: Apprentice 1×, Practitioner 1.5×, Expert 2×, Master 3×  
+Streak bonus: `min(1.0 + streak×0.15, 2.5)` | Hint penalty: 0.75×
 
-**Streak rules:**
-- Score ≥ 2 → increment streak
-- Score 0 → reset streak to 0
-- Score 1 → no change to streak
+```bash
+skill-issue score --id [N] --score [0-3] --topic [tag] --difficulty [Level]
+```
 
-## Persistent Storage
+Full formula + worked examples → `references/scoring-and-adaptation.md`
 
-All state in `~/.skill-issue/`:
-- `profile.json` — XP, streak, topic mastery, milestones, next challenge ID
-- `config.yaml` — frequency, difficulty, domain prefs
-- `sessions/YYYY-MM-DD_NNN.json` — per-session challenge logs
-- `leaderboard.md` — trophy wall (regenerated by `generate_report.py`)
+## Feedback Style
 
-Profile schema and session log schema → see `references/scoring-and-adaptation.md`
+- Wrong → what they got right first, then the gap. Never shame.
+- Partial → acknowledge + fill the gap
+- Correct → brief confirmation + one extra insight
+- Exceptional → "That's deeper than I was testing for."
 
-## Scripts
+## User Commands
 
-| Script | Purpose |
+| Say | Action |
 |---|---|
-| `scripts/init_profile.py` | Bootstrap `~/.skill-issue/` directory |
-| `scripts/update_score.py` | Apply XP + update topic levels after a challenge |
-| `scripts/generate_report.py` | Regenerate `leaderboard.md` trophy wall |
-| `scripts/export_stats.py` | Export history to JSON/CSV |
-
-Run `generate_report.py` at the end of every session.
-
-## Commands
-
-| Command | Action |
-|---|---|
-| `my stats` / `show profile` / `skill report` | Display current profile summary |
-| `harder` / `more difficult` | Shift difficulty bias +1 |
-| `easier` / `less difficult` | Shift difficulty bias -1 |
-| `more challenges` | Reduce cooldown, increase probability |
-| `fewer challenges` / `chill` | Increase cooldown, decrease probability |
-| `focus mode` / `no challenges` | Suppress all challenges until turned off |
-| `challenges on` | Resume after focus mode |
-| `skip` | Skip current challenge (score 0) |
-| `hint` | Get a hint (reduces max score to 2) |
-| `trophy wall` / `leaderboard` | Show leaderboard.md |
-| `challenge me` | Force a challenge right now |
-| `reset stats` | Reset profile (with confirmation) |
-| `config` | Show current config.yaml |
-
-## Tone & Personality
-
-- **Mentor, not quiz host.** Challenge during natural pauses, not in the middle of flow.
-- **Be concise.** Challenges should take 30–90 seconds. If longer, simplify or split.
-- **Celebrate genuinely.** One line, not a paragraph.
-- **Handle wrong answers with grace.** "Here's the insight you were missing" not "that's wrong."
-- **Adapt to energy.** Frustrated or tired → ease up. Engaged and crushing it → ramp up.
+| `my stats` / `trophy wall` | Show profile / leaderboard |
+| `harder` / `easier` | Shift difficulty ±1 |
+| `focus mode` / `challenges on` | Toggle off/on |
+| `challenge me` | Force challenge now |
+| `show graph` | `skill-issue graph show --domain <domain>` |
+| `show brain` | `skill-issue graph web --domain <domain>` (D3 viz) |
+| `hint` / `skip` | Hint (0.75× XP) / skip (score 0) |
 
 ## Session Lifecycle
 
-**Start:** Check `~/.skill-issue/`, load profile + config, create session file, greet:
-> "Welcome back, [name]. You're on a [N]-streak 🔥. Level: [L] ([XP] XP). Let's build something."
+**End of session:** `skill-issue report` → summary + update leaderboard  
+**After 7+ days away:** start one difficulty level lower for first 2 challenges  
+**3 consecutive wrong:** "Want me to walk through the last concept before we continue?"
 
-**End:** Finalize session log, run `generate_report.py`, show summary:
-> "Session complete. [N] challenges, [M] correct, +[XP] XP. Streak: 🔥[S]. See you next time."
+## Visualization
 
-## Edge Cases
-
-- **First session**: Start Apprentice regardless of stated expertise. Calibrate over 5–10 challenges.
-- **Returning after >7 days**: Start one difficulty level lower for first 2–3 challenges.
-- **3+ consecutive wrong**: Pause and ask: "Want me to walk through the last concept before we continue?"
-- **Human disputes score**: Always defer. Re-evaluate if they explain their reasoning.
-- **Domain-specific depth**: For quantum/ML, go deep. Expert-level challenges require genuine expert knowledge.
-
-## Knowledge Graph Integration
-
-The knowledge graph system enables targeted challenges based on concept importance and user mastery.
-
-### Available Domains
-
-Check available domains:
 ```bash
-skill-issue graph domains
+skill-issue graph show --domain quantum-ml   # ASCII bar chart in terminal
+skill-issue graph web --domain quantum-ml    # D3 force-directed graph in browser
 ```
 
-Current domains:
-- `quantum-ml` — Variational circuits, parameter shift, barren plateaus, etc.
-- `algorithms` — Time complexity, DP, binary search, graph traversal, etc.
-
-### Before Issuing a Challenge
-
-1. **Get priority nodes** for the current domain:
-   ```bash
-   skill-issue graph weak --domain quantum-ml --json
-   ```
-   Returns top 5 highest-priority nodes (high reuse_weight × low mastery).
-
-2. **Map current code to nodes** to check relevance:
-   ```python
-   from skill_issue.knowledge_state import map_code_to_nodes
-   matches = map_code_to_nodes(code_snippet, "quantum-ml")
-   # Returns [(node_id, node_info, match_count), ...]
-   ```
-
-3. **Target weak, high-priority nodes** when crafting challenges:
-   - If the code touches a weak node → challenge on that concept
-   - Use `challenge_hooks` from the node for question ideas
-   - Prioritize nodes with high `reuse_weight` (fundamental concepts)
-
-### After Scoring a Challenge
-
-Update the knowledge graph mastery:
-```bash
-skill-issue graph update --node parameter-shift-rule --score 2 --domain quantum-ml
-```
-
-Score mapping:
-- `0` → 0.0 mastery observation (wrong/skip)
-- `1` → 0.3 mastery observation (partial)
-- `2` → 0.7 mastery observation (correct)
-- `3` → 1.0 mastery observation (exceptional)
-
-Mastery uses exponential moving average (EMA) with α=0.3, weighting recent performance.
-
-### Decay System
-
-Mastery decays gently for concepts not practiced:
-- 3-day grace period (no decay)
-- After grace: 0.02/day decay
-
-Run decay manually (usually automatic):
-```bash
-skill-issue graph decay
-```
-
-### Visualization
-
-**ASCII (terminal):**
-```bash
-skill-issue graph show --domain quantum-ml
-```
-
-**Web (D3 force-directed graph):**
-```bash
-skill-issue graph web --domain quantum-ml
-```
-Opens interactive HTML with:
-- Nodes sized by reuse_weight
-- Colors by mastery status
-- Click for details + challenge hooks
-- Priority nodes highlighted
-
-### Challenge Targeting Strategy
-
-1. **High priority = reuse_weight × (1 - mastery)**
-   - Focus on fundamentals the human hasn't mastered
-   - A 0.95 reuse_weight concept at 0.1 mastery → 0.855 priority
-   - A 0.70 reuse_weight concept at 0.9 mastery → 0.07 priority
-
-2. **When to use graph-targeted challenges:**
-   - Code touches a concept in the graph
-   - Human is working in a domain with a knowledge graph
-   - Challenge cooldown has passed
-
-3. **When to use ad-hoc challenges:**
-   - Concept not in graph (add it later!)
-   - Cross-domain insight opportunity
-   - Bug-fix or debugging context
-
-### Extending the Graph
-
-Add new nodes to `references/knowledge_graphs/<domain>.json`:
-
-```json
-{
-  "id": "new-concept",
-  "name": "New Concept Name",
-  "description": "What this concept is about",
-  "reuse_weight": 0.85,
-  "aliases": ["alt-name", "abbreviation"],
-  "prerequisites": ["existing-concept"],
-  "related": ["other-concept"],
-  "sources": ["Paper2024"],
-  "challenge_hooks": [
-    "Question idea 1",
-    "Question idea 2"
-  ]
-}
-```
-
-Then initialize for the user:
-```bash
-skill-issue graph init --domain <domain>
-```
+Nodes sized by `reuse_weight`, colored by mastery. Click nodes to see challenge hooks.
