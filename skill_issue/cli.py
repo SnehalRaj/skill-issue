@@ -19,6 +19,45 @@ def _get_skill_md_path() -> Path:
     return skill_md_path
 
 
+def get_user_primary_domain() -> str | None:
+    """Read primary domain from ~/.skill-issue/config.yaml.
+
+    Returns the first domain in the domains list, or None if:
+    - config.yaml doesn't exist
+    - domains list is empty or missing
+    """
+    import yaml
+    config_path = Path.home() / ".skill-issue" / "config.yaml"
+    if not config_path.exists():
+        return None
+    try:
+        with open(config_path) as f:
+            config = yaml.safe_load(f)
+        domains = config.get("domains", [])
+        if domains:
+            return domains[0]
+    except Exception:
+        pass
+    return None
+
+
+def _require_domain(args_domain: str | None, command_name: str) -> str:
+    """Get domain from args or config, exit with helpful error if none available."""
+    if args_domain:
+        return args_domain
+
+    domain = get_user_primary_domain()
+    if domain:
+        return domain
+
+    print(f"No domain specified for '{command_name}'.")
+    print("\nOptions:")
+    print("  1. Specify domain:  skill-issue graph {0} --domain <name>".format(command_name))
+    print("  2. Run onboarding:  skill-issue init")
+    print("  3. List available:  skill-issue graph domains")
+    sys.exit(1)
+
+
 def cmd_init(args):
     """Initialize ~/.skill-issue/ profile and/or inject into editor config."""
     from skill_issue.init_profile import init_profile
@@ -27,6 +66,18 @@ def cmd_init(args):
     profile_exists = (skill_dir / "profile.json").exists()
     wants_injection = args.claude or args.cursor or args.print_only
     force = getattr(args, "force", False)
+
+    # --print can work without profile - just output SKILL.md
+    if args.print_only:
+        skill_md_path = _get_skill_md_path()
+        if skill_md_path.exists():
+            print("\n" + "─" * 60)
+            print("Paste this into your editor's system prompt / rules file:")
+            print("─" * 60)
+            print(skill_md_path.read_text())
+        else:
+            print(f"SKILL.md not found at {skill_md_path}")
+        return
 
     # Profile creation: only if profile doesn't exist or --force
     if not profile_exists or force:
@@ -69,14 +120,6 @@ def cmd_init(args):
         _inject_into_file("CLAUDE.md", skill_md_path)
     elif args.cursor:
         _inject_into_file(".cursorrules", skill_md_path)
-    elif args.print_only:
-        if skill_md_path.exists():
-            print("\n" + "─" * 60)
-            print("Paste this into your editor's system prompt / rules file:")
-            print("─" * 60)
-            print(skill_md_path.read_text())
-        else:
-            print(f"SKILL.md not found at {skill_md_path}")
     elif not profile_exists or force:
         # Only show next steps if we just created a profile
         print("\nNext step — activate in your editor:")
@@ -207,7 +250,7 @@ def cmd_graph_show(args):
     """Show ASCII visualization of knowledge graph."""
     from skill_issue.graph_viz import ascii_graph
     from skill_issue.knowledge_state import list_domains
-    domain = args.domain
+    domain = _require_domain(args.domain, "show")
     if domain not in list_domains():
         print(f"Domain '{domain}' not found. Available: {', '.join(list_domains())}")
         sys.exit(1)
@@ -217,7 +260,7 @@ def cmd_graph_show(args):
 def cmd_graph_weak(args):
     """Show top priority (weak + high reuse_weight) nodes."""
     from skill_issue.knowledge_state import list_domains
-    domain = args.domain
+    domain = _require_domain(args.domain, "weak")
     if domain not in list_domains():
         print(f"Domain '{domain}' not found. Available: {', '.join(list_domains())}")
         sys.exit(1)
@@ -267,7 +310,7 @@ def cmd_graph_web(args):
     import tempfile
     import webbrowser
 
-    domain = args.domain
+    domain = _require_domain(args.domain, "web")
     if domain not in list_domains():
         print(f"Domain '{domain}' not found. Available: {', '.join(list_domains())}")
         sys.exit(1)
@@ -327,8 +370,8 @@ def main():
     # init
     p_init = sub.add_parser("init", help="Set up your ~/.skill-issue/ profile")
     p_init.add_argument("--name", help="Your name (default: $USER)")
-    p_init.add_argument("--domains", default="quantum,ml,algorithms",
-                        help="Comma-separated domains (default: quantum,ml,algorithms)")
+    p_init.add_argument("--domains", default=None,
+                        help="Comma-separated domains (triggers onboarding interview if omitted)")
     p_init.add_argument("--force", action="store_true", help="Overwrite existing profile")
     p_init.add_argument("--claude", action="store_true", help="Auto-inject into CLAUDE.md (Claude Code)")
     p_init.add_argument("--cursor", action="store_true", help="Auto-inject into .cursorrules (Cursor)")
@@ -365,12 +408,12 @@ def main():
 
     # graph show
     p_graph_show = graph_sub.add_parser("show", help="Show ASCII visualization")
-    p_graph_show.add_argument("--domain", default="quantum-ml", help="Domain (default: quantum-ml)")
+    p_graph_show.add_argument("--domain", default=None, help="Domain (default: from config)")
     p_graph_show.set_defaults(func=cmd_graph_show)
 
     # graph weak
     p_graph_weak = graph_sub.add_parser("weak", help="Show top priority nodes")
-    p_graph_weak.add_argument("--domain", default="quantum-ml", help="Domain (default: quantum-ml)")
+    p_graph_weak.add_argument("--domain", default=None, help="Domain (default: from config)")
     p_graph_weak.add_argument("--top", type=int, default=5, help="Number of nodes (default: 5)")
     p_graph_weak.add_argument("--json", action="store_true", help="Output as JSON")
     p_graph_weak.set_defaults(func=cmd_graph_weak)
@@ -389,7 +432,7 @@ def main():
 
     # graph web
     p_graph_web = graph_sub.add_parser("web", help="Generate D3 web visualization")
-    p_graph_web.add_argument("--domain", default="quantum-ml", help="Domain (default: quantum-ml)")
+    p_graph_web.add_argument("--domain", default=None, help="Domain (default: from config)")
     p_graph_web.add_argument("--output", help="Output HTML file path")
     p_graph_web.add_argument("--no-open", action="store_true", help="Don't open in browser")
     p_graph_web.set_defaults(func=cmd_graph_web)
