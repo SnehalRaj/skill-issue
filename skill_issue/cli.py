@@ -46,6 +46,9 @@ def cmd_init(args):
                     ks.init_domain(domain)
                 except Exception:
                     pass
+
+            # Offer retroactive bootstrap from Claude Code history
+            _offer_history_bootstrap(domains)
         else:
             domains = args.domains.split(",")
             init_profile(
@@ -80,6 +83,32 @@ def cmd_init(args):
         print("  Claude Code:  skill-issue init --claude")
         print("  Cursor:       skill-issue init --cursor")
         print("  Other:        skill-issue init --print")
+
+
+def _offer_history_bootstrap(domains: list):
+    """Offer to bootstrap knowledge state from Claude Code session history."""
+    from skill_issue.analyzer import find_all_sessions, run_analysis, format_analysis_report
+
+    sessions = find_all_sessions()
+    if not sessions:
+        return  # No history to analyze
+
+    print(f"\n📚 Found {len(sessions)} Claude Code session(s) in your history.")
+    print("   We can analyze these to set your initial mastery levels.")
+    print("   (Questions you asked → weakness, code you wrote → strength)\n")
+
+    try:
+        response = input("   Analyze history to bootstrap your knowledge graph? [Y/n] ").strip().lower()
+    except (EOFError, KeyboardInterrupt):
+        print("\n   Skipped.")
+        return
+
+    if response in ("", "y", "yes"):
+        print("\n🔍 Analyzing sessions...\n")
+        result = run_analysis(all_projects=True, domains=domains)
+        print(format_analysis_report(result))
+    else:
+        print("   Skipped. Run `skill-issue analyze` anytime to bootstrap later.")
 
 
 def _inject_into_file(filename: str, skill_md_path: Path):
@@ -273,6 +302,21 @@ def cmd_graph_domains(args):
     print_available_domains()
 
 
+def cmd_analyze(args):
+    """Analyze Claude Code session history to bootstrap knowledge state."""
+    from skill_issue.analyzer import run_analysis, format_analysis_report
+
+    print("\n🔍 Analyzing Claude Code session history...\n")
+
+    result = run_analysis(
+        all_projects=args.all,
+        max_sessions=args.max_sessions,
+        dry_run=args.dry_run,
+    )
+
+    print(format_analysis_report(result))
+
+
 def main():
     parser = argparse.ArgumentParser(
         prog="skill-issue",
@@ -357,6 +401,16 @@ def main():
     # graph domains
     p_graph_domains = graph_sub.add_parser("domains", help="List available domains")
     p_graph_domains.set_defaults(func=cmd_graph_domains)
+
+    # analyze
+    p_analyze = sub.add_parser("analyze", help="Bootstrap knowledge from Claude Code history")
+    p_analyze.add_argument("--all", action="store_true",
+                           help="Analyze all projects (default: current directory only)")
+    p_analyze.add_argument("--max-sessions", type=int, default=50,
+                           help="Max sessions to analyze (default: 50)")
+    p_analyze.add_argument("--dry-run", action="store_true",
+                           help="Show analysis without applying changes")
+    p_analyze.set_defaults(func=cmd_analyze)
 
     args = parser.parse_args()
 
