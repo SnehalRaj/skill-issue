@@ -191,3 +191,124 @@ Run `generate_report.py` at the end of every session.
 - **3+ consecutive wrong**: Pause and ask: "Want me to walk through the last concept before we continue?"
 - **Human disputes score**: Always defer. Re-evaluate if they explain their reasoning.
 - **Domain-specific depth**: For quantum/ML, go deep. Expert-level challenges require genuine expert knowledge.
+
+## Knowledge Graph Integration
+
+The knowledge graph system enables targeted challenges based on concept importance and user mastery.
+
+### Available Domains
+
+Check available domains:
+```bash
+skill-issue graph domains
+```
+
+Current domains:
+- `quantum-ml` — Variational circuits, parameter shift, barren plateaus, etc.
+- `algorithms` — Time complexity, DP, binary search, graph traversal, etc.
+
+### Before Issuing a Challenge
+
+1. **Get priority nodes** for the current domain:
+   ```bash
+   skill-issue graph weak --domain quantum-ml --json
+   ```
+   Returns top 5 highest-priority nodes (high reuse_weight × low mastery).
+
+2. **Map current code to nodes** to check relevance:
+   ```python
+   from skill_issue.knowledge_state import map_code_to_nodes
+   matches = map_code_to_nodes(code_snippet, "quantum-ml")
+   # Returns [(node_id, node_info, match_count), ...]
+   ```
+
+3. **Target weak, high-priority nodes** when crafting challenges:
+   - If the code touches a weak node → challenge on that concept
+   - Use `challenge_hooks` from the node for question ideas
+   - Prioritize nodes with high `reuse_weight` (fundamental concepts)
+
+### After Scoring a Challenge
+
+Update the knowledge graph mastery:
+```bash
+skill-issue graph update --node parameter-shift-rule --score 2 --domain quantum-ml
+```
+
+Score mapping:
+- `0` → 0.0 mastery observation (wrong/skip)
+- `1` → 0.3 mastery observation (partial)
+- `2` → 0.7 mastery observation (correct)
+- `3` → 1.0 mastery observation (exceptional)
+
+Mastery uses exponential moving average (EMA) with α=0.3, weighting recent performance.
+
+### Decay System
+
+Mastery decays gently for concepts not practiced:
+- 3-day grace period (no decay)
+- After grace: 0.02/day decay
+
+Run decay manually (usually automatic):
+```bash
+skill-issue graph decay
+```
+
+### Visualization
+
+**ASCII (terminal):**
+```bash
+skill-issue graph show --domain quantum-ml
+```
+
+**Web (D3 force-directed graph):**
+```bash
+skill-issue graph web --domain quantum-ml
+```
+Opens interactive HTML with:
+- Nodes sized by reuse_weight
+- Colors by mastery status
+- Click for details + challenge hooks
+- Priority nodes highlighted
+
+### Challenge Targeting Strategy
+
+1. **High priority = reuse_weight × (1 - mastery)**
+   - Focus on fundamentals the human hasn't mastered
+   - A 0.95 reuse_weight concept at 0.1 mastery → 0.855 priority
+   - A 0.70 reuse_weight concept at 0.9 mastery → 0.07 priority
+
+2. **When to use graph-targeted challenges:**
+   - Code touches a concept in the graph
+   - Human is working in a domain with a knowledge graph
+   - Challenge cooldown has passed
+
+3. **When to use ad-hoc challenges:**
+   - Concept not in graph (add it later!)
+   - Cross-domain insight opportunity
+   - Bug-fix or debugging context
+
+### Extending the Graph
+
+Add new nodes to `references/knowledge_graphs/<domain>.json`:
+
+```json
+{
+  "id": "new-concept",
+  "name": "New Concept Name",
+  "description": "What this concept is about",
+  "reuse_weight": 0.85,
+  "aliases": ["alt-name", "abbreviation"],
+  "prerequisites": ["existing-concept"],
+  "related": ["other-concept"],
+  "sources": ["Paper2024"],
+  "challenge_hooks": [
+    "Question idea 1",
+    "Question idea 2"
+  ]
+}
+```
+
+Then initialize for the user:
+```bash
+skill-issue graph init --domain <domain>
+```
