@@ -10,6 +10,7 @@
   <a href="https://github.com/SnehalRaj/skill-issue/stargazers"><img src="https://img.shields.io/github/stars/SnehalRaj/skill-issue?style=flat" alt="Stars" /></a>
   <img src="https://img.shields.io/badge/works%20with-Claude%20Code-orange" alt="Claude Code" />
   <img src="https://img.shields.io/badge/works%20with-Cursor-purple" alt="Cursor" />
+  <a href="https://github.com/SnehalRaj/skill-issue/actions"><img src="https://img.shields.io/github/actions/workflow/status/SnehalRaj/skill-issue/test.yml?branch=main&label=tests" alt="Tests" /></a>
 </p>
 
 <p><strong>Your AI writes the code. But does your brain keep up?</strong></p>

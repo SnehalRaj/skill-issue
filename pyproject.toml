@@ -27,5 +27,12 @@ skill-issue = "skill_issue.cli:main"
 where = ["."]
 include = ["skill_issue*"]
 
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
 [tool.setuptools.package-data]
 skill_issue = ["SKILL.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
