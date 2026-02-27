@@ -40,10 +40,14 @@ quiet_hours: []
 """
 
 
-def init_profile(username: str = None, domains: list = None):
+def init_profile(username: str = None, domains: list = None, force: bool = False):
     if SKILL_DIR.exists():
-        print(f"skill-issue directory already exists at {SKILL_DIR}")
-        return
+        if not force:
+            print(f"skill-issue directory already exists at {SKILL_DIR}")
+            return
+        import shutil
+        shutil.rmtree(SKILL_DIR)
+        print(f"Reinitializing {SKILL_DIR}...")
 
     SKILL_DIR.mkdir(parents=True)
     (SKILL_DIR / "sessions").mkdir()
