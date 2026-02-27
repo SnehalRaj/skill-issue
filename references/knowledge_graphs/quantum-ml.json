@@ -1,0 +1,217 @@
+{
+  "domain": "quantum-ml",
+  "version": 1,
+  "description": "Quantum Machine Learning knowledge graph covering variational circuits, optimization, and quantum advantage",
+  "nodes": [
+    {
+      "id": "parameter-shift-rule",
+      "name": "Parameter Shift Rule",
+      "description": "Method for computing exact gradients of quantum circuits by shifting rotation angles by +/- pi/2",
+      "reuse_weight": 0.95,
+      "aliases": ["parameter shift", "PSR", "shift rule", "analytic gradients"],
+      "prerequisites": [],
+      "related": ["variational-circuits", "quantum-natural-gradient", "barren-plateaus"],
+      "sources": ["Schuld2019", "Mitarai2018"],
+      "challenge_hooks": [
+        "Why exactly pi/2 shift? Derive from eigenvalue spectrum",
+        "When does PSR fail vs finite differences?",
+        "Cost scaling: how many circuit evaluations per gradient?"
+      ]
+    },
+    {
+      "id": "barren-plateaus",
+      "name": "Barren Plateaus",
+      "description": "Phenomenon where gradient variance vanishes exponentially with circuit depth/width, making optimization infeasible",
+      "reuse_weight": 0.90,
+      "aliases": ["barren plateau", "vanishing gradients quantum", "BP", "expressibility-trainability tradeoff"],
+      "prerequisites": ["variational-circuits", "parameter-shift-rule"],
+      "related": ["circuit-expressibility", "entanglement-structure", "quantum-natural-gradient"],
+      "sources": ["McClean2018", "Cerezo2021"],
+      "challenge_hooks": [
+        "How does circuit depth affect gradient variance?",
+        "Connection to 2-design and Haar randomness",
+        "Mitigation strategies: locality, layer-wise training"
+      ]
+    },
+    {
+      "id": "variational-circuits",
+      "name": "Variational Quantum Circuits",
+      "description": "Parameterized quantum circuits optimized classically, foundation of VQE/QAOA/QML",
+      "reuse_weight": 0.95,
+      "aliases": ["VQC", "parameterized circuits", "ansatz", "variational ansatz", "PQC"],
+      "prerequisites": [],
+      "related": ["vqe", "qaoa", "parameter-shift-rule", "circuit-expressibility"],
+      "sources": ["Peruzzo2014", "Cerezo2021review"],
+      "challenge_hooks": [
+        "Design choices: depth vs width vs connectivity",
+        "What makes a good ansatz for a given problem?",
+        "Hardware-efficient vs problem-inspired ansatze"
+      ]
+    },
+    {
+      "id": "data-encoding",
+      "name": "Data Encoding",
+      "description": "Methods for encoding classical data into quantum states: amplitude, angle, IQP, data re-uploading",
+      "reuse_weight": 0.90,
+      "aliases": ["quantum embedding", "feature map", "data embedding", "encoding strategy"],
+      "prerequisites": [],
+      "related": ["quantum-kernels", "variational-circuits", "circuit-expressibility"],
+      "sources": ["SchuldPetruccione2021", "Havlicek2019"],
+      "challenge_hooks": [
+        "Amplitude vs angle encoding: expressiveness tradeoffs",
+        "Data re-uploading: why interleave encoding and processing?",
+        "Classical simulability of specific encodings"
+      ]
+    },
+    {
+      "id": "quantum-kernels",
+      "name": "Quantum Kernels",
+      "description": "Using quantum circuits to compute kernel functions, connecting to classical kernel methods",
+      "reuse_weight": 0.85,
+      "aliases": ["quantum kernel methods", "QKE", "quantum feature maps", "fidelity kernel"],
+      "prerequisites": ["data-encoding"],
+      "related": ["quantum-advantage", "classical-simulation-limits"],
+      "sources": ["Havlicek2019", "Schuld2019kernels"],
+      "challenge_hooks": [
+        "Fidelity kernel: inner product in Hilbert space",
+        "When can classical kernels match quantum?",
+        "Projected quantum kernels and their benefits"
+      ]
+    },
+    {
+      "id": "entanglement-structure",
+      "name": "Entanglement Structure",
+      "description": "Role of entanglement patterns in circuit expressibility and trainability",
+      "reuse_weight": 0.85,
+      "aliases": ["entanglement", "entangling layers", "correlation structure"],
+      "prerequisites": ["variational-circuits"],
+      "related": ["barren-plateaus", "circuit-expressibility", "classical-simulation-limits"],
+      "sources": ["Sim2019", "Nakaji2021"],
+      "challenge_hooks": [
+        "How does entanglement depth affect expressibility?",
+        "Connection between entanglement and barren plateaus",
+        "Efficient classical simulation of low-entanglement circuits"
+      ]
+    },
+    {
+      "id": "vqe",
+      "name": "Variational Quantum Eigensolver",
+      "description": "Hybrid algorithm for finding ground states of Hamiltonians using variational optimization",
+      "reuse_weight": 0.80,
+      "aliases": ["VQE", "variational eigensolver", "ground state preparation"],
+      "prerequisites": ["variational-circuits", "parameter-shift-rule"],
+      "related": ["qaoa", "error-mitigation", "shot-noise"],
+      "sources": ["Peruzzo2014", "Tilly2022"],
+      "challenge_hooks": [
+        "Cost function: why expectation values?",
+        "Classical optimizer choice and its impact",
+        "Hamiltonian grouping for measurement reduction"
+      ]
+    },
+    {
+      "id": "qaoa",
+      "name": "QAOA",
+      "description": "Quantum Approximate Optimization Algorithm for combinatorial optimization",
+      "reuse_weight": 0.75,
+      "aliases": ["quantum approximate optimization", "QAOA", "quantum optimization"],
+      "prerequisites": ["variational-circuits"],
+      "related": ["vqe", "quantum-advantage", "barren-plateaus"],
+      "sources": ["Farhi2014", "Zhou2020"],
+      "challenge_hooks": [
+        "Mixer and cost Hamiltonian design",
+        "Depth-performance tradeoffs",
+        "Connection to adiabatic quantum computing"
+      ]
+    },
+    {
+      "id": "shot-noise",
+      "name": "Shot Noise",
+      "description": "Statistical uncertainty from finite measurement samples affecting gradient estimation",
+      "reuse_weight": 0.80,
+      "aliases": ["measurement noise", "sampling noise", "finite shots", "statistical error"],
+      "prerequisites": [],
+      "related": ["parameter-shift-rule", "vqe", "error-mitigation"],
+      "sources": ["Sweke2020", "Kubler2020"],
+      "challenge_hooks": [
+        "Shot budget allocation across parameters",
+        "Variance reduction techniques",
+        "Optimal number of shots for gradient descent"
+      ]
+    },
+    {
+      "id": "quantum-natural-gradient",
+      "name": "Quantum Natural Gradient",
+      "description": "Second-order optimization using quantum Fisher information matrix",
+      "reuse_weight": 0.70,
+      "aliases": ["QNG", "natural gradient", "Fisher information", "imaginary time evolution"],
+      "prerequisites": ["parameter-shift-rule", "variational-circuits"],
+      "related": ["barren-plateaus", "vqe"],
+      "sources": ["Stokes2020", "Yamamoto2019"],
+      "challenge_hooks": [
+        "Classical vs quantum Fisher information",
+        "Block-diagonal approximations for scalability",
+        "Connection to imaginary time evolution"
+      ]
+    },
+    {
+      "id": "circuit-expressibility",
+      "name": "Circuit Expressibility",
+      "description": "Ability of a parameterized circuit to explore the unitary or state space",
+      "reuse_weight": 0.75,
+      "aliases": ["expressibility", "expressivity", "state coverage"],
+      "prerequisites": ["variational-circuits"],
+      "related": ["barren-plateaus", "entanglement-structure", "data-encoding"],
+      "sources": ["Sim2019", "Holmes2022"],
+      "challenge_hooks": [
+        "Expressibility vs trainability tradeoff",
+        "Measuring expressibility: frame potential",
+        "Over-parameterization effects"
+      ]
+    },
+    {
+      "id": "classical-simulation-limits",
+      "name": "Classical Simulation Limits",
+      "description": "Boundaries of efficient classical simulation: tensor networks, stabilizer formalism, low entanglement",
+      "reuse_weight": 0.80,
+      "aliases": ["simulability", "classical simulation", "tensor networks", "Clifford simulation"],
+      "prerequisites": [],
+      "related": ["quantum-advantage", "entanglement-structure", "quantum-kernels"],
+      "sources": ["Jozsa2006", "Gottesman1998"],
+      "challenge_hooks": [
+        "Clifford circuits and Gottesman-Knill theorem",
+        "When tensor network contraction fails",
+        "Magic states and non-Clifford gates"
+      ]
+    },
+    {
+      "id": "quantum-advantage",
+      "name": "Quantum Advantage",
+      "description": "Demonstrating computational speedup over best known classical algorithms",
+      "reuse_weight": 0.70,
+      "aliases": ["quantum supremacy", "quantum speedup", "computational advantage"],
+      "prerequisites": ["classical-simulation-limits"],
+      "related": ["quantum-kernels", "qaoa"],
+      "sources": ["Arute2019", "Huang2022"],
+      "challenge_hooks": [
+        "Advantage vs supremacy distinction",
+        "Practical vs asymptotic advantage",
+        "Dequantization attacks on claimed advantages"
+      ]
+    },
+    {
+      "id": "error-mitigation",
+      "name": "Error Mitigation",
+      "description": "Techniques to reduce noise effects without full error correction: ZNE, PEC, DD",
+      "reuse_weight": 0.75,
+      "aliases": ["noise mitigation", "ZNE", "PEC", "dynamical decoupling", "error suppression"],
+      "prerequisites": [],
+      "related": ["vqe", "shot-noise"],
+      "sources": ["Temme2017", "Kandala2019"],
+      "challenge_hooks": [
+        "Zero-noise extrapolation: assumptions and limits",
+        "Probabilistic error cancellation overhead",
+        "When does mitigation break down?"
+      ]
+    }
+  ]
+}
